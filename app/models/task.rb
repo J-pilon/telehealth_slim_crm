@@ -3,6 +3,7 @@
 # Task model representing tasks assigned to patients
 class Task < ApplicationRecord
   belongs_to :patient
+  belongs_to :user
 
   # Enums
   enum status: { pending: 'pending', completed: 'completed' }
