@@ -57,6 +57,9 @@ gem "tailwindcss-rails", "~> 2.0"
 gem "sidekiq", "~> 7.0"
 gem "redis", "~> 5.0"
 
+# Pagination
+gem "kaminari", "~> 1.2"
+
 # Testing
 gem "rspec-rails", "~> 6.0", group: [:development, :test]
 gem "factory_bot_rails", "~> 6.4", group: [:development, :test]
