@@ -1,0 +1,54 @@
+<%= form_with(model: task, local: false, class: "space-y-4") do |form| %>
+  <% if task.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+      <h2 class="font-bold"><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+      <ul class="mt-2 list-disc list-inside">
+        <% task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-2">
+    <div class="sm:col-span-2">
+      <%= form.label :title, class: "form-label" %>
+      <%= form.text_field :title, class: "form-input" %>
+    </div>
+
+    <div class="sm:col-span-2">
+      <%= form.label :description, class: "form-label" %>
+      <%= form.text_area :description, rows: 3, class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :patient_id, "Patient", class: "form-label" %>
+      <%= form.select :patient_id, 
+          Patient.active.by_name.map { |p| [p.full_name, p.id] },
+          { prompt: "Select a patient" },
+          class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :due_date, class: "form-label" %>
+      <%= form.date_field :due_date, class: "form-input" %>
+    </div>
+
+    <% if current_user.admin? %>
+      <div>
+        <%= form.label :status, class: "form-label" %>
+        <%= form.select :status, 
+            Task.statuses.keys.map { |s| [s.humanize, s] },
+            { selected: task.status || 'pending' },
+            class: "form-input" %>
+      </div>
+    <% else %>
+      <%= form.hidden_field :status, value: 'pending' %>
+    <% end %>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Cancel", tasks_path, class: "btn-secondary" %>
+    <%= form.submit (task.persisted? ? "Update Task" : "Create Task"), class: "btn-primary" %>
+  </div>
+<% end %>

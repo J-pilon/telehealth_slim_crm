@@ -22,12 +22,20 @@ class TaskPolicy < ApplicationPolicy
     admin?
   end
 
+  def complete?
+    admin? || (patient? && user.patient?)
+  end
+
+  def reopen?
+    admin? || (patient? && user.patient?)
+  end
+
   class Scope < Scope
     def resolve
       if user.admin?
         scope.all
       elsif user.patient?
-        scope.none # Patients don't have direct access to tasks
+        scope.where(user: user) # Patients can see their own tasks
       else
         scope.none
       end
