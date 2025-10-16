@@ -1,0 +1,116 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-900">Patients</h1>
+    <%= link_to "Add New Patient", new_patient_path, class: "btn-primary" %>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white shadow rounded-lg p-4">
+    <div class="flex flex-wrap gap-4">
+      <%= link_to "All", patients_path, 
+          class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-blue-100 text-blue-700' unless params[:status]}" %>
+      <%= link_to "Active", patients_path(status: 'active'), 
+          class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-green-100 text-green-700' if params[:status] == 'active'}" %>
+      <%= link_to "Inactive", patients_path(status: 'inactive'), 
+          class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-gray-100 text-gray-700' if params[:status] == 'inactive'}" %>
+      
+      <div class="ml-auto flex gap-2">
+        <%= link_to "Sort by Name", patients_path(sort: 'name'), 
+            class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-blue-100 text-blue-700' if params[:sort] == 'name'}" %>
+        <%= link_to "Sort by Recent", patients_path(sort: 'recent'), 
+            class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-blue-100 text-blue-700' if params[:sort] == 'recent'}" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Patients List -->
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <% if @patients.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @patients.each do |patient| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                      <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="text-sm font-medium text-gray-700">
+                          <%= patient.first_name.first %><%= patient.last_name.first %>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= link_to patient.full_name, patient_path(patient), class: "hover:text-blue-600" %>
+                      </div>
+                      <div class="text-sm text-gray-500">MR# <%= patient.medical_record_number %></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= patient.email %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= patient.phone %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="status-badge status-<%= patient.status %>">
+                    <%= patient.status.capitalize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <div class="flex space-x-2">
+                    <span class="text-yellow-600"><%= patient.pending_tasks_count %> pending</span>
+                    <span class="text-green-600"><%= patient.tasks.completed.count %> completed</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <%= link_to "View", patient_path(patient), class: "text-blue-600 hover:text-blue-900" %>
+                    <%= link_to "Edit", edit_patient_path(patient), class: "text-indigo-600 hover:text-indigo-900" %>
+                    <%= link_to "Delete", patient_path(patient), 
+                        data: { 
+                          method: :delete, 
+                          confirm: 'Are you sure?' 
+                        }, 
+                        class: "text-red-600 hover:text-red-900" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+        <%= paginate @patients %>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <div class="mx-auto h-12 w-12 text-gray-400">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No patients</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by creating a new patient.</p>
+        <div class="mt-6">
+          <%= link_to "Add New Patient", new_patient_path, class: "btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
