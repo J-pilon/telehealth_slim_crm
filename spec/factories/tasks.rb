@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :task do
     patient
+    user
     title { Faker::Lorem.sentence(word_count: 3) }
     description { Faker::Lorem.paragraph(sentence_count: 2) }
     status { 'pending' }
@@ -19,7 +20,7 @@ FactoryBot.define do
     end
 
     trait :due_today do
-      due_date { Date.current }
+      due_date { Date.current.end_of_day }
     end
 
     trait :due_tomorrow do
@@ -28,6 +29,12 @@ FactoryBot.define do
 
     trait :urgent do
       due_date { 1.hour.from_now }
+    end
+
+    trait :with_messages do
+      after(:create) do |task|
+        create_list(:message, 3, patient: task.patient, user: task.user)
+      end
     end
   end
 end
