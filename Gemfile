@@ -63,6 +63,7 @@ gem "factory_bot_rails", "~> 6.4", group: [:development, :test]
 gem "faker", "~> 3.2", group: [:development, :test]
 gem "shoulda-matchers", "~> 5.3", group: [:development, :test]
 gem "pundit-matchers", "~> 3.1", group: [:development, :test]
+gem "rails-controller-testing", "~> 1.0", group: [:development, :test]
 
 # Linting and security
 gem "rubocop-rails", "~> 2.25", group: [:development, :test]
