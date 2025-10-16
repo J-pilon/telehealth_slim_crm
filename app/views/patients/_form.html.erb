@@ -1,0 +1,59 @@
+<%= form_with(model: patient, local: true, class: "space-y-6") do |form| %>
+  <% if patient.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <h3 class="text-sm font-medium text-red-800 mb-2">
+        <%= pluralize(patient.errors.count, "error") %> prohibited this patient from being saved:
+      </h3>
+      <ul class="text-sm text-red-700 list-disc list-inside">
+        <% patient.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :first_name, class: "form-label" %>
+      <%= form.text_field :first_name, class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :last_name, class: "form-label" %>
+      <%= form.text_field :last_name, class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :email, class: "form-label" %>
+      <%= form.email_field :email, class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :phone, class: "form-label" %>
+      <%= form.telephone_field :phone, class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :date_of_birth, class: "form-label" %>
+      <%= form.date_field :date_of_birth, class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :medical_record_number, class: "form-label" %>
+      <%= form.text_field :medical_record_number, class: "form-input" %>
+    </div>
+
+    <div>
+      <%= form.label :status, class: "form-label" %>
+      <%= form.select :status, 
+          options_for_select([['Active', 'active'], ['Inactive', 'inactive']], patient.status),
+          { prompt: 'Select status' }, 
+          { class: "form-input" } %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Cancel", patients_path, class: "btn-secondary" %>
+    <%= form.submit (patient.persisted? ? "Update Patient" : "Create Patient"), class: "btn-primary" %>
+  </div>
+<% end %>
