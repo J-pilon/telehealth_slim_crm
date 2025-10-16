@@ -14,17 +14,16 @@ FactoryBot.define do
       status { 'inactive' }
     end
 
-    # These traits will be enabled after Message and Task models are created
-    # trait :with_messages do
-    #   after(:create) do |patient|
-    #     create_list(:message, 3, patient: patient)
-    #   end
-    # end
+    trait :with_messages do
+      after(:create) do |patient|
+        create_list(:message, 3, patient: patient)
+      end
+    end
 
-    # trait :with_tasks do
-    #   after(:create) do |patient|
-    #     create_list(:task, 2, patient: patient)
-    #   end
-    # end
+    trait :with_tasks do
+      after(:create) do |patient|
+        create_list(:task, 2, patient: patient)
+      end
+    end
   end
 end
