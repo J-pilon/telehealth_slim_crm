@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root "dashboard#index"
 
   resources :patients do
-    resources :messages, only: [:index, :create]
+    resources :messages, only: [:index, :show, :create, :edit, :update, :destroy]
     resources :tasks, only: [:index, :create, :update]
   end
 end

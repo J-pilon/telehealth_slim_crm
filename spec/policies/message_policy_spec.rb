@@ -65,11 +65,12 @@ RSpec.describe MessagePolicy, type: :policy do
       expect(MessagePolicy::Scope.new(admin, Message).resolve.count).to eq(3)
     end
 
-    it 'returns no messages for patients' do
-      create_list(:message, 2, patient: patient_record, user: patient_user)
+    it 'returns only patient own messages for patients' do
+      patient_messages = create_list(:message, 2, patient: patient_record, user: patient_user)
       create(:message, patient: create(:patient), user: admin)
 
-      expect(MessagePolicy::Scope.new(patient_user, Message).resolve.count).to eq(0)
+      expect(MessagePolicy::Scope.new(patient_user, Message).resolve.count).to eq(2)
+      expect(MessagePolicy::Scope.new(patient_user, Message).resolve).to include(*patient_messages)
     end
   end
 end
