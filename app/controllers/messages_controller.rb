@@ -1,0 +1,95 @@
+# frozen_string_literal: true
+
+class MessagesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_patient
+  before_action :set_message, only: [:show, :edit, :update, :destroy]
+
+  def index
+    authorize Message
+    @messages = policy_scope(@patient.messages.recent)
+    @message = @patient.messages.build
+  end
+
+  def show
+    authorize @message
+  end
+
+  def create
+    @message = @patient.messages.build(message_params)
+    @message.user = current_user
+    authorize @message
+
+    respond_to do |format|
+      if @message.save
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.prepend('messages-list', partial: 'messages/message', locals: { message: @message }),
+            turbo_stream.replace('message-form', partial: 'messages/form', locals: { message: @patient.messages.build, patient: @patient }),
+            turbo_stream.update('message-count', html: @patient.messages.count)
+          ]
+        end
+        format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully sent.' }
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace('message-form', partial: 'messages/form', locals: { message: @message, patient: @patient })
+        end
+        format.html do
+          @messages = policy_scope(@patient.messages.recent)
+          render :index, status: :unprocessable_content
+        end
+      end
+    end
+  end
+
+  def edit
+    authorize @message
+  end
+
+  def update
+    authorize @message
+
+    respond_to do |format|
+      if @message.update(message_params)
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("message_#{@message.id}", partial: 'messages/message', locals: { message: @message })
+        end
+        format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully updated.' }
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("message_#{@message.id}", partial: 'messages/form', locals: { message: @message, patient: @patient })
+        end
+        format.html { render :edit, status: :unprocessable_content }
+      end
+    end
+  end
+
+  def destroy
+    authorize @message
+    @message.destroy
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove("message_#{@message.id}"),
+          turbo_stream.update('message-count', html: @patient.messages.count)
+        ]
+      end
+      format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully deleted.' }
+    end
+  end
+
+  private
+
+  def set_patient
+    @patient = Patient.find(params[:patient_id])
+  end
+
+  def set_message
+    @message = @patient.messages.find(params[:id])
+  end
+
+  def message_params
+    params.require(:message).permit(:content, :message_type)
+  end
+end

@@ -1,0 +1,31 @@
+<%= form_with(model: [patient, message], local: false, class: "space-y-4") do |form| %>
+  <% if message.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+      <h2 class="font-bold"><%= pluralize(message.errors.count, "error") %> prohibited this message from being saved:</h2>
+      <ul class="mt-2 list-disc list-inside">
+        <% message.errors.full_messages.each do |message_text| %>
+          <li><%= message_text %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="flex space-x-4">
+    <div class="flex-1">
+      <%= form.text_area :content, 
+          placeholder: "Type your message here...", 
+          rows: 3,
+          class: "form-input resize-none" %>
+    </div>
+    <div class="w-32">
+      <%= form.select :message_type, 
+          Message.message_types.keys.map { |type| [type.humanize, type] },
+          { prompt: "Type" },
+          class: "form-input" %>
+    </div>
+  </div>
+
+  <div class="flex justify-end">
+    <%= form.submit "Send Message", class: "btn-primary" %>
+  </div>
+<% end %>
