@@ -23,8 +23,8 @@ RSpec.describe PatientPolicy, type: :policy do
       expect(PatientPolicy.new(admin, patient_record).show?).to be true
     end
 
-    it 'allows patients to view patient records' do
-      expect(PatientPolicy.new(patient_user, patient_record).show?).to be true
+    it 'denies patients from viewing patient records' do
+      expect(PatientPolicy.new(patient_user, patient_record).show?).to be false
     end
   end
 
