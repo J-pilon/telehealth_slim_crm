@@ -3,7 +3,7 @@
 # Policy for Message resource authorization
 class MessagePolicy < ApplicationPolicy
   def index?
-    logged_in?
+    admin? || (patient? && user.patient?)
   end
 
   def show?
@@ -11,7 +11,7 @@ class MessagePolicy < ApplicationPolicy
   end
 
   def create?
-    logged_in?
+    admin? || (patient? && user.patient?)
   end
 
   def update?
@@ -19,7 +19,7 @@ class MessagePolicy < ApplicationPolicy
   end
 
   def destroy?
-    admin?
+    admin? || (patient? && record.user == user)
   end
 
   class Scope < Scope
@@ -27,7 +27,7 @@ class MessagePolicy < ApplicationPolicy
       if user.admin?
         scope.all
       elsif user.patient?
-        scope.none # Patients don't have direct access to messages
+        scope.where(user: user) # Patients can see their own messages
       else
         scope.none
       end
