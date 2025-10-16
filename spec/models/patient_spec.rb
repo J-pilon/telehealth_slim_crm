@@ -34,11 +34,10 @@ RSpec.describe Patient, type: :model do
     end
   end
 
-  # Associations will be tested after Message and Task models are created
-  # describe 'associations' do
-  #   it { should have_many(:messages).dependent(:destroy) }
-  #   it { should have_many(:tasks).dependent(:destroy) }
-  # end
+  describe 'associations' do
+    it { should have_many(:messages).dependent(:destroy) }
+    it { should have_many(:tasks).dependent(:destroy) }
+  end
 
   describe 'scopes' do
     let!(:active_patient) { create(:patient, :active) }
@@ -116,14 +115,13 @@ RSpec.describe Patient, 'factory' do
     expect(patient.status).to eq('inactive')
   end
 
-  # These tests will be enabled after Message and Task models are created
-  # it 'creates a patient with messages' do
-  #   patient = create(:patient, :with_messages)
-  #   expect(patient.messages.count).to eq(3)
-  # end
+  it 'creates a patient with messages' do
+    patient = create(:patient, :with_messages)
+    expect(patient.messages.count).to eq(3)
+  end
 
-  # it 'creates a patient with tasks' do
-  #   patient = create(:patient, :with_tasks)
-  #   expect(patient.tasks.count).to eq(2)
-  # end
+  it 'creates a patient with tasks' do
+    patient = create(:patient, :with_tasks)
+    expect(patient.tasks.count).to eq(2)
+  end
 end

@@ -2,9 +2,9 @@
 
 # Patient model representing healthcare patients in the CRM system
 class Patient < ApplicationRecord
-  # Associations - will be enabled after Message and Task models are created
-  # has_many :messages, dependent: :destroy
-  # has_many :tasks, dependent: :destroy
+  # Associations
+  has_many :messages, dependent: :destroy
+  has_many :tasks, dependent: :destroy
 
   # Enums
   enum status: { active: 'active', inactive: 'inactive' }
@@ -38,12 +38,11 @@ class Patient < ApplicationRecord
     age
   end
 
-  # These methods will be enabled after Message and Task models are created
-  # def pending_tasks_count
-  #   tasks.pending.count
-  # end
+  def pending_tasks_count
+    tasks.pending.count
+  end
 
-  # def recent_messages_count
-  #   messages.where('created_at > ?', 7.days.ago).count
-  # end
+  def recent_messages_count
+    messages.where('created_at > ?', 7.days.ago).count
+  end
 end
