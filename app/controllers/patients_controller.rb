@@ -31,6 +31,8 @@ class PatientsController < ApplicationController
     authorize @patient
 
     if @patient.save
+      # Send welcome email in background
+      WelcomeEmailJob.perform_later(@patient.id)
       redirect_to @patient, notice: 'Patient was successfully created.'
     else
       render :new, status: :unprocessable_content

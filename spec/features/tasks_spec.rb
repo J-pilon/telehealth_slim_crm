@@ -265,6 +265,9 @@ RSpec.describe 'Task Management', type: :system do
       # Wait for the task to be updated
       expect(page).to have_content('Completed')
 
+      # Wait a moment for the Turbo Stream to process
+      sleep 0.5
+
       # Verify task is completed
       task.reload
       expect(task.status).to eq('completed')
