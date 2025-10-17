@@ -46,36 +46,36 @@
     <div class="header">
       <h1>Welcome to Telehealth CRM</h1>
     </div>
-    
+
     <div class="content">
       <h2>Hello <%= @patient.first_name %>!</h2>
-      
+
       <p>Welcome to our telehealth platform. We're excited to have you as a patient and look forward to providing you with excellent healthcare services.</p>
-      
+
       <p>Your account has been set up with the following details:</p>
       <ul>
         <li><strong>Name:</strong> <%= @patient.full_name %></li>
         <li><strong>Email:</strong> <%= @patient.email %></li>
         <li><strong>Medical Record Number:</strong> <%= @patient.medical_record_number %></li>
       </ul>
-      
+
       <p>You can now access your patient portal to:</p>
       <ul>
         <li>View your messages from our healthcare team</li>
         <li>Check your assigned tasks and care plan</li>
         <li>Communicate with your healthcare providers</li>
       </ul>
-      
+
       <div style="text-align: center;">
         <a href="<%= @url %>" class="button">Access Your Portal</a>
       </div>
-      
+
       <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
-      
+
       <p>Best regards,<br>
       The Telehealth CRM Team</p>
     </div>
-    
+
     <div class="footer">
       <p>This is an automated message. Please do not reply to this email.</p>
     </div>

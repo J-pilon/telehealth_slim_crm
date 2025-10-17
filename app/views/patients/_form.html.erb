@@ -45,9 +45,9 @@
 
     <div>
       <%= form.label :status, class: "form-label" %>
-      <%= form.select :status, 
+      <%= form.select :status,
           options_for_select([['Active', 'active'], ['Inactive', 'inactive']], patient.status),
-          { prompt: 'Select status' }, 
+          { prompt: 'Select status' },
           { class: "form-input" } %>
     </div>
   </div>

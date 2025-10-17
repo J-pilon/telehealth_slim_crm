@@ -34,28 +34,28 @@
                   Telehealth CRM
                 <% end %>
               </div>
-              
+
               <!-- Navigation Links -->
               <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <%= link_to "Dashboard", root_path, 
+                <%= link_to "Dashboard", root_path,
                     class: "inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" %>
-                
+
                      <% if current_user.admin? %>
                        <%= link_to "Patients", patients_path,
                            class: "inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" %>
                 <%= link_to "Tasks", tasks_path,
                     class: "inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" %>
                      <% end %>
-                
+
                 <% if current_user.patient? %>
-                  <%= link_to "Messages", "#", 
+                  <%= link_to "Messages", "#",
                       class: "inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" %>
-                  <%= link_to "My Tasks", "#", 
+                  <%= link_to "My Tasks", "#",
                       class: "inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" %>
                 <% end %>
               </div>
             </div>
-            
+
             <!-- User Menu -->
             <div class="hidden sm:ml-6 sm:flex sm:items-center">
               <div class="relative ml-3">
@@ -63,7 +63,7 @@
                   <span class="text-sm text-gray-700">
                     <%= current_user.email %> (<%= current_user.role.capitalize %>)
                   </span>
-                  <%= link_to "Sign Out", destroy_user_session_path, 
+                  <%= link_to "Sign Out", destroy_user_session_path,
                       method: :delete,
                       class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm" %>
                 </div>
@@ -81,7 +81,7 @@
 
     <!-- Notification Container -->
     <div class="fixed top-4 right-4 z-50" data-controller="notification">
-      <div class="hidden px-6 py-3 text-white bg-blue-500 rounded-lg border border-blue-400 shadow-lg" 
+      <div class="hidden px-6 py-3 text-white bg-blue-500 rounded-lg border border-blue-400 shadow-lg"
            data-notification-target="message">
         <div class="flex justify-between items-center">
           <span data-notification-target="text"></span>
