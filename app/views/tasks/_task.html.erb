@@ -74,9 +74,7 @@
 
     <!-- Actions -->
     <div class="flex items-center ml-4 space-x-2">
-      <% if policy(task).show? %>
         <%= link_to "View", task_path(task), class: "text-blue-600 hover:text-blue-900 text-sm" %>
-      <% end %>
       <% if policy(task).update? %>
         <%= link_to "Edit", edit_task_path(task), class: "text-indigo-600 hover:text-indigo-900 text-sm" %>
       <% end %>
