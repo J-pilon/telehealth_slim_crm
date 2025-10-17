@@ -112,10 +112,10 @@ RSpec.describe 'Dashboard', type: :system do
       expect(page).to have_content('Admin')
     end
 
-    it 'has sign out link' do
+    it 'has sign out button' do
       visit root_path
 
-      expect(page).to have_link('Sign Out')
+      expect(page).to have_button('Sign Out')
     end
   end
 end
