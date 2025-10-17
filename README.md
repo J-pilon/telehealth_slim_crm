@@ -14,6 +14,22 @@ A minimal CRM skeleton built with Rails 7, designed for healthcare providers to 
 - **Comprehensive Testing** - RSpec with 341+ tests including feature tests
 - **CI/CD Pipeline** - GitHub Actions with automated testing and security checks
 
+## Authentication & User Roles
+
+### Patient Registration
+- Patients can self-register through the sign-up page
+- All registrations default to the 'patient' role
+- Upon registration, a patient profile is automatically created
+
+### Admin Access
+- Admins are invited by existing admins
+- Admin users cannot be created through public registration
+- Future consideration: Implement `devise_invitable` gem for formal invitation workflow
+
+### Default Credentials (Development)
+- Admin: admin@example.com / password123
+- Patient: patient@example.com / password123
+
 ## Tech Stack
 
 - **Ruby** 3.3.0

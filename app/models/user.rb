@@ -15,7 +15,32 @@ class User < ApplicationRecord
   # Validations
   validates :role, presence: true
 
+  # Callbacks
+  after_initialize :set_default_role, if: :new_record?
+  after_create :create_patient_if_needed
+
   # Scopes
   scope :admins, -> { where(role: 'admin') }
   scope :patients, -> { where(role: 'patient') }
+
+  private
+
+  def set_default_role
+    self.role ||= 'patient'
+  end
+
+  def create_patient_if_needed
+    return unless patient? && patient.blank?
+
+    Patient.create!(
+      user: self,
+      first_name: 'New',
+      last_name: 'Patient',
+      email: email,
+      phone: '0000000000',
+      date_of_birth: 18.years.ago,
+      medical_record_number: "MR#{SecureRandom.hex(4).upcase}",
+      status: 'active'
+    )
+  end
 end

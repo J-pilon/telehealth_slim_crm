@@ -1,0 +1,35 @@
+<div class="flex justify-center items-center px-4 py-12 min-h-screen bg-gray-50 sm:px-6 lg:px-8">
+  <div class="space-y-8 w-full max-w-md">
+    <div>
+      <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900">
+        Forgot your password?
+      </h2>
+      <p class="mt-2 text-sm text-center text-gray-600">
+        Enter your email address and we'll send you instructions to reset your password.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-4 py-5 sm:p-6">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, local: true, class: "space-y-6" }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+
+          <div>
+            <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input" %>
+            </div>
+          </div>
+
+          <div>
+            <%= f.submit "Send reset instructions", class: "btn-primary w-full" %>
+          </div>
+        <% end %>
+
+        <div class="mt-6">
+          <%= render "devise/shared/links" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

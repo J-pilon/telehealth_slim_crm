@@ -494,4 +494,47 @@ GitHub Repository
 
 ---
 
-*This architecture document is maintained alongside the codebase and should be updated as the system evolves.*
+## Authentication Strategy
+
+### User Registration Flow
+
+**Patient Self-Registration**
+- Public registration is enabled exclusively for patient users
+- Default role assignment happens at model initialization
+- Associated Patient record is created automatically post-registration
+- Benefits:
+  - Reduces administrative overhead for patient onboarding
+  - Patients can immediately access the portal
+  - Self-service reduces support costs
+
+**Admin Invitation Model**
+- Admins cannot self-register through public forms
+- Admin accounts are created by existing administrators
+- Current implementation: Manual creation via Rails console or seed data
+- Recommended enhancement: `devise_invitable` gem
+
+### Benefits of Registration by Invitation (Admin Users)
+
+**Security & Access Control**
+1. **Controlled Access**: Prevents unauthorized users from obtaining admin privileges
+2. **Audit Trail**: All admin accounts have a clear provenance (invited by X)
+3. **Accountability**: Each admin creation is a deliberate, traceable action
+4. **Reduced Attack Surface**: No public-facing admin registration endpoint to exploit
+
+**Operational Advantages**
+1. **Compliance**: Meets healthcare data security requirements (HIPAA-ready)
+2. **Onboarding Integration**: Invitation can include onboarding documentation
+3. **Role Customization**: Inviter can set specific permissions during invitation
+4. **Revocable**: Invitations can expire or be revoked before acceptance
+
+**Implementation with devise_invitable**
+- Generates unique, expiring invitation tokens
+- Tracks invitation state (pending, accepted, expired)
+- Allows invited user to set their own password
+- Provides `invited_by` association for audit purposes
+- Integrates seamlessly with existing Devise flow
+
+**Current Workaround**
+- Admins created via Rails console: `User.create!(email: '...', password: '...', role: 'admin')`
+- Seed data for development environments
+- Future: Replace with formal invitation system for production use
