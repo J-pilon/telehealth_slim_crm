@@ -1,22 +1,13 @@
-# frozen_string_literal: true
-
-# ERB Lint configuration
-# This file configures ERB Lint for consistent ERB template style
+---
+# .erb_lint.yml
+# Configuration for ERB Lint
+# See https://github.com/Shopify/erb-lint#configuration
 
 EnableDefaultLinters: true
 
 linters:
   ErbSafety:
     enabled: true
-    enforce_deprecated_helpers: true
-    enforce_deprecated_assigns: true
-    enforce_deprecated_renders: true
-
-  ErbLint:
-    enabled: true
-    enforce_deprecated_helpers: true
-    enforce_deprecated_assigns: true
-    enforce_deprecated_renders: true
 
   NoJavascriptTagHelper:
     enabled: true
