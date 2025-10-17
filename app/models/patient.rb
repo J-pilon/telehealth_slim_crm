@@ -3,6 +3,7 @@
 # Patient model representing healthcare patients in the CRM system
 class Patient < ApplicationRecord
   # Associations
+  belongs_to :user, optional: true
   has_many :messages, dependent: :destroy
   has_many :tasks, dependent: :destroy
 
