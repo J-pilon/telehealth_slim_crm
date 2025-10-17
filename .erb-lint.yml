@@ -1,0 +1,49 @@
+# frozen_string_literal: true
+
+# ERB Lint configuration
+# This file configures ERB Lint for consistent ERB template style
+
+EnableDefaultLinters: true
+
+linters:
+  ErbSafety:
+    enabled: true
+    enforce_deprecated_helpers: true
+    enforce_deprecated_assigns: true
+    enforce_deprecated_renders: true
+
+  ErbLint:
+    enabled: true
+    enforce_deprecated_helpers: true
+    enforce_deprecated_assigns: true
+    enforce_deprecated_renders: true
+
+  NoJavascriptTagHelper:
+    enabled: true
+
+  NoUnusedDisable:
+    enabled: true
+
+  ParserErrors:
+    enabled: true
+
+  RightToLeft:
+    enabled: true
+
+  SpaceAroundErbTag:
+    enabled: true
+
+  SpaceErbTagStart:
+    enabled: true
+
+  UnusedDisable:
+    enabled: true
+
+exclude:
+  - 'vendor/**/*'
+  - 'node_modules/**/*'
+  - 'tmp/**/*'
+  - 'log/**/*'
+  - 'storage/**/*'
+  - 'public/**/*'
+  - 'coverage/**/*'
