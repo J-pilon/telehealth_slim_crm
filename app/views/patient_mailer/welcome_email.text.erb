@@ -1,0 +1,25 @@
+Welcome to Telehealth CRM
+
+Hello <%= @patient.first_name %>!
+
+Welcome to our telehealth platform. We're excited to have you as a patient and look forward to providing you with excellent healthcare services.
+
+Your account has been set up with the following details:
+- Name: <%= @patient.full_name %>
+- Email: <%= @patient.email %>
+- Medical Record Number: <%= @patient.medical_record_number %>
+
+You can now access your patient portal to:
+- View your messages from our healthcare team
+- Check your assigned tasks and care plan
+- Communicate with your healthcare providers
+
+Access your portal: <%= @url %>
+
+If you have any questions or need assistance, please don't hesitate to contact our support team.
+
+Best regards,
+The Telehealth CRM Team
+
+---
+This is an automated message. Please do not reply to this email.
