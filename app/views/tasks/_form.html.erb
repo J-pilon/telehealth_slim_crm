@@ -23,7 +23,7 @@
 
     <div>
       <%= form.label :patient_id, "Patient", class: "form-label" %>
-      <%= form.select :patient_id, 
+      <%= form.select :patient_id,
           Patient.active.by_name.map { |p| [p.full_name, p.id] },
           { prompt: "Select a patient" },
           class: "form-input" %>
@@ -37,7 +37,7 @@
     <% if current_user.admin? %>
       <div>
         <%= form.label :status, class: "form-label" %>
-        <%= form.select :status, 
+        <%= form.select :status,
             Task.statuses.keys.map { |s| [s.humanize, s] },
             { selected: task.status || 'pending' },
             class: "form-input" %>

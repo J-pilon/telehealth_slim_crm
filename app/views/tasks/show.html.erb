@@ -21,14 +21,14 @@
           <label class="form-label">Title</label>
           <p class="mt-1 text-sm text-gray-900"><%= @task.title %></p>
         </div>
-        
+
         <% if @task.description.present? %>
           <div>
             <label class="form-label">Description</label>
             <p class="mt-1 text-sm text-gray-900"><%= @task.description %></p>
           </div>
         <% end %>
-        
+
         <div>
           <label class="form-label">Status</label>
           <p class="mt-1">
@@ -46,15 +46,15 @@
             <% end %>
           </p>
         </div>
-        
+
         <div>
           <label class="form-label">Patient</label>
           <p class="mt-1 text-sm text-gray-900">
-            <%= link_to @task.patient.full_name, patient_path(@task.patient), 
+            <%= link_to @task.patient.full_name, patient_path(@task.patient),
                 class: "text-blue-600 hover:text-blue-900" %>
           </p>
         </div>
-        
+
         <div>
           <label class="form-label">Due Date</label>
           <p class="mt-1 text-sm text-gray-900"><%= @task.due_date.strftime('%B %d, %Y') %></p>
@@ -72,34 +72,34 @@
           <p class="mt-1 text-sm text-gray-900"><%= @task.created_at.strftime('%B %d, %Y at %I:%M %p') %></p>
         </div>
       </div>
-      
+
       <!-- Actions -->
       <div class="mt-6 flex space-x-3">
         <% if policy(@task).update? %>
           <% if @task.pending? %>
-            <%= link_to "Mark Complete", complete_task_path(@task), 
+            <%= link_to "Mark Complete", complete_task_path(@task),
                 method: :patch,
-                data: { 
-                  method: :patch, 
-                  confirm: 'Mark this task as completed?' 
+                data: {
+                  method: :patch,
+                  confirm: 'Mark this task as completed?'
                 },
                 class: "btn-success" %>
           <% else %>
-            <%= link_to "Reopen Task", reopen_task_path(@task), 
+            <%= link_to "Reopen Task", reopen_task_path(@task),
                 method: :patch,
-                data: { 
-                  method: :patch, 
-                  confirm: 'Reopen this task?' 
+                data: {
+                  method: :patch,
+                  confirm: 'Reopen this task?'
                 },
                 class: "btn-secondary" %>
           <% end %>
         <% end %>
         <% if policy(@task).destroy? %>
-          <%= link_to "Delete Task", task_path(@task), 
+          <%= link_to "Delete Task", task_path(@task),
               method: :delete,
-              data: { 
-                method: :delete, 
-                confirm: 'Are you sure?' 
+              data: {
+                method: :delete,
+                confirm: 'Are you sure?'
               },
               class: "btn-danger" %>
         <% end %>

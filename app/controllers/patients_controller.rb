@@ -2,7 +2,7 @@
 
 class PatientsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_patient, only: [:show, :edit, :update, :destroy]
+  before_action :set_patient, only: %i[show edit update destroy]
 
   def index
     authorize Patient
@@ -26,6 +26,10 @@ class PatientsController < ApplicationController
     authorize @patient
   end
 
+  def edit
+    authorize @patient
+  end
+
   def create
     @patient = Patient.new(patient_params)
     authorize @patient
@@ -37,10 +41,6 @@ class PatientsController < ApplicationController
     else
       render :new, status: :unprocessable_content
     end
-  end
-
-  def edit
-    authorize @patient
   end
 
   def update
@@ -63,17 +63,22 @@ class PatientsController < ApplicationController
     authorize Patient
     query = params[:q]
 
-    if query.present?
-      @patients = Patient.where(
-        "first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ? OR medical_record_number ILIKE ?",
-        "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%"
-      ).limit(10)
-    else
-      @patients = []
-    end
+    @patients = if query.present?
+                  Patient.where(
+                    'first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ? OR medical_record_number ILIKE ?',
+                    "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%"
+                  ).limit(10)
+                else
+                  []
+                end
 
     respond_to do |format|
-      format.json { render json: @patients.map { |p| { id: p.id, full_name: p.full_name, email: p.email, medical_record_number: p.medical_record_number, status: p.status } } }
+      format.json do
+        render json: @patients.map { |p|
+          { id: p.id, full_name: p.full_name, email: p.email, medical_record_number: p.medical_record_number,
+            status: p.status }
+        }
+      end
     end
   end
 
@@ -85,6 +90,6 @@ class PatientsController < ApplicationController
 
   def patient_params
     params.require(:patient).permit(:first_name, :last_name, :email, :phone,
-                                   :date_of_birth, :medical_record_number, :status)
+                                    :date_of_birth, :medical_record_number, :status)
   end
 end

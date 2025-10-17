@@ -6,7 +6,7 @@ class Task < ApplicationRecord
   belongs_to :user
 
   # Enums
-  enum status: { pending: 'pending', completed: 'completed' }
+  enum :status, { pending: 'pending', completed: 'completed' }
 
   # Validations
   validates :title, presence: true, length: { minimum: 3, maximum: 100 }
@@ -18,8 +18,8 @@ class Task < ApplicationRecord
   scope :pending, -> { where(status: 'pending') }
   scope :completed, -> { where(status: 'completed') }
   scope :overdue, -> { where('due_date < ? AND status = ?', Date.current.beginning_of_day, 'pending') }
-  scope :due_today, -> { where(due_date: Date.current.beginning_of_day..Date.current.end_of_day) }
-  scope :due_this_week, -> { where(due_date: Date.current.beginning_of_week..Date.current.end_of_week) }
+  scope :due_today, -> { where(due_date: Date.current.all_day) }
+  scope :due_this_week, -> { where(due_date: Date.current.all_week) }
   scope :by_due_date, -> { order(:due_date) }
   scope :recent, -> { order(created_at: :desc) }
 

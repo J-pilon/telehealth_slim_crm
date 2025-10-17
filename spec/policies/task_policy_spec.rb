@@ -11,50 +11,50 @@ RSpec.describe TaskPolicy, type: :policy do
 
   describe '#index?' do
     it 'allows logged in users' do
-      expect(TaskPolicy.new(admin, Task).index?).to be true
-      expect(TaskPolicy.new(patient_user, Task).index?).to be true
+      expect(described_class.new(admin, Task).index?).to be true
+      expect(described_class.new(patient_user, Task).index?).to be true
     end
   end
 
   describe '#show?' do
     it 'allows admins to view any task' do
-      expect(TaskPolicy.new(admin, task).show?).to be true
+      expect(described_class.new(admin, task).show?).to be true
     end
 
     it 'allows patients to view tasks' do
       patient_task = create(:task, patient: patient_record)
-      expect(TaskPolicy.new(patient_user, patient_task).show?).to be true
+      expect(described_class.new(patient_user, patient_task).show?).to be true
     end
   end
 
   describe '#create?' do
     it 'allows admins' do
-      expect(TaskPolicy.new(admin, Task).create?).to be true
+      expect(described_class.new(admin, Task).create?).to be true
     end
 
     it 'denies patients' do
-      expect(TaskPolicy.new(patient_user, Task).create?).to be false
+      expect(described_class.new(patient_user, Task).create?).to be false
     end
   end
 
   describe '#update?' do
     it 'allows admins to update any task' do
-      expect(TaskPolicy.new(admin, task).update?).to be true
+      expect(described_class.new(admin, task).update?).to be true
     end
 
     it 'allows patients to update tasks' do
       patient_task = create(:task, patient: patient_record)
-      expect(TaskPolicy.new(patient_user, patient_task).update?).to be true
+      expect(described_class.new(patient_user, patient_task).update?).to be true
     end
   end
 
   describe '#destroy?' do
     it 'allows admins' do
-      expect(TaskPolicy.new(admin, task).destroy?).to be true
+      expect(described_class.new(admin, task).destroy?).to be true
     end
 
     it 'denies patients' do
-      expect(TaskPolicy.new(patient_user, task).destroy?).to be false
+      expect(described_class.new(patient_user, task).destroy?).to be false
     end
   end
 

@@ -4,39 +4,39 @@ require 'rails_helper'
 
 RSpec.describe Patient, type: :model do
   describe 'validations' do
-    it { should validate_presence_of(:first_name) }
-    it { should validate_presence_of(:last_name) }
-    it { should validate_presence_of(:email) }
-    it { should validate_presence_of(:phone) }
-    it { should validate_presence_of(:date_of_birth) }
-    it { should validate_presence_of(:medical_record_number) }
-    it { should validate_presence_of(:status) }
+    it { is_expected.to validate_presence_of(:first_name) }
+    it { is_expected.to validate_presence_of(:last_name) }
+    it { is_expected.to validate_presence_of(:email) }
+    it { is_expected.to validate_presence_of(:phone) }
+    it { is_expected.to validate_presence_of(:date_of_birth) }
+    it { is_expected.to validate_presence_of(:medical_record_number) }
+    it { is_expected.to validate_presence_of(:status) }
 
-    it { should validate_length_of(:first_name).is_at_least(2).is_at_most(50) }
-    it { should validate_length_of(:last_name).is_at_least(2).is_at_most(50) }
-    it { should validate_length_of(:medical_record_number).is_at_least(5).is_at_most(20) }
+    it { is_expected.to validate_length_of(:first_name).is_at_least(2).is_at_most(50) }
+    it { is_expected.to validate_length_of(:last_name).is_at_least(2).is_at_most(50) }
+    it { is_expected.to validate_length_of(:medical_record_number).is_at_least(5).is_at_most(20) }
 
-    it { should validate_uniqueness_of(:medical_record_number) }
+    it { is_expected.to validate_uniqueness_of(:medical_record_number) }
 
-    it { should allow_value('test@example.com').for(:email) }
-    it { should_not allow_value('invalid-email').for(:email) }
+    it { is_expected.to allow_value('test@example.com').for(:email) }
+    it { is_expected.not_to allow_value('invalid-email').for(:email) }
 
-    it { should allow_value('1234567890').for(:phone) }
-    it { should_not allow_value('123').for(:phone) }
-    it { should_not allow_value('abc1234567').for(:phone) }
+    it { is_expected.to allow_value('1234567890').for(:phone) }
+    it { is_expected.not_to allow_value('123').for(:phone) }
+    it { is_expected.not_to allow_value('abc1234567').for(:phone) }
   end
 
   describe 'enums' do
     it do
-      should define_enum_for(:status)
+      expect(subject).to define_enum_for(:status)
         .with_values(active: 'active', inactive: 'inactive')
         .backed_by_column_of_type(:string)
     end
   end
 
   describe 'associations' do
-    it { should have_many(:messages).dependent(:destroy) }
-    it { should have_many(:tasks).dependent(:destroy) }
+    it { is_expected.to have_many(:messages).dependent(:destroy) }
+    it { is_expected.to have_many(:tasks).dependent(:destroy) }
   end
 
   describe 'scopes' do
@@ -45,37 +45,38 @@ RSpec.describe Patient, type: :model do
 
     describe '.active' do
       it 'returns only active patients' do
-        expect(Patient.active).to include(active_patient)
-        expect(Patient.active).not_to include(inactive_patient)
+        expect(described_class.active).to include(active_patient)
+        expect(described_class.active).not_to include(inactive_patient)
       end
     end
 
     describe '.inactive' do
       it 'returns only inactive patients' do
-        expect(Patient.inactive).to include(inactive_patient)
-        expect(Patient.inactive).not_to include(active_patient)
+        expect(described_class.inactive).to include(inactive_patient)
+        expect(described_class.inactive).not_to include(active_patient)
       end
     end
 
     describe '.by_name' do
       it 'orders by last name then first name' do
-        Patient.destroy_all # Clear existing data
-        patient1 = create(:patient, first_name: 'John', last_name: 'Doe')
-        patient2 = create(:patient, first_name: 'Jane', last_name: 'Doe')
-        patient3 = create(:patient, first_name: 'Alice', last_name: 'Smith')
+        described_class.destroy_all # Clear existing data
+        create(:patient, first_name: 'John', last_name: 'Doe')
+        create(:patient, first_name: 'Jane', last_name: 'Doe')
+        create(:patient, first_name: 'Alice', last_name: 'Smith')
 
-        expect(Patient.by_name.pluck(:first_name, :last_name)).to eq([['Jane', 'Doe'], ['John', 'Doe'], ['Alice', 'Smith']])
+        expect(described_class.by_name.pluck(:first_name,
+                                             :last_name)).to eq([%w[Jane Doe], %w[John Doe], %w[Alice Smith]])
       end
     end
 
     describe '.recent' do
       it 'orders by created_at desc' do
-        Patient.destroy_all # Clear existing data
+        described_class.destroy_all # Clear existing data
         patient1 = create(:patient)
         patient2 = create(:patient)
 
-        expect(Patient.recent.first).to eq(patient2)
-        expect(Patient.recent.last).to eq(patient1)
+        expect(described_class.recent.first).to eq(patient2)
+        expect(described_class.recent.last).to eq(patient1)
       end
     end
   end

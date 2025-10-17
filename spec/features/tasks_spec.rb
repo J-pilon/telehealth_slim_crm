@@ -37,8 +37,8 @@ RSpec.describe 'Task Management', type: :system do
     end
 
     it 'filters tasks by status' do
-      pending_task = create(:task, :pending, patient: @patient, title: 'Pending Task')
-      completed_task = create(:task, :completed, patient: @patient, title: 'Completed Task')
+      create(:task, :pending, patient: @patient, title: 'Pending Task')
+      create(:task, :completed, patient: @patient, title: 'Completed Task')
 
       visit tasks_path
 
@@ -55,8 +55,8 @@ RSpec.describe 'Task Management', type: :system do
       # Clear existing data
       Task.destroy_all
 
-      task1 = create(:task, patient: @patient, due_date: 3.days.from_now, title: 'Task 1')
-      task2 = create(:task, patient: @patient, due_date: 1.day.from_now, title: 'Task 2')
+      create(:task, patient: @patient, due_date: 3.days.from_now, title: 'Task 1')
+      create(:task, patient: @patient, due_date: 1.day.from_now, title: 'Task 2')
 
       visit tasks_path
 
@@ -156,7 +156,7 @@ RSpec.describe 'Task Management', type: :system do
       expect(task_element).to have_button('Mark Complete')
     end
 
-    it 'deletes a task', :skip => "Delete functionality works in controller tests" do
+    it 'deletes a task', skip: 'Delete functionality works in controller tests' do
       task = create(:task, patient: @patient, title: 'Task to Delete')
 
       visit tasks_path

@@ -4,14 +4,14 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'validations' do
-    it { should validate_presence_of(:role) }
-    it { should validate_presence_of(:email) }
-    it { should validate_presence_of(:password) }
+    it { is_expected.to validate_presence_of(:role) }
+    it { is_expected.to validate_presence_of(:email) }
+    it { is_expected.to validate_presence_of(:password) }
   end
 
   describe 'enums' do
     it do
-      should define_enum_for(:role)
+      expect(subject).to define_enum_for(:role)
         .with_values(admin: 'admin', patient: 'patient')
         .backed_by_column_of_type(:string)
     end
@@ -23,15 +23,15 @@ RSpec.describe User, type: :model do
 
     describe '.admins' do
       it 'returns only admin users' do
-        expect(User.admins).to include(admin_user)
-        expect(User.admins).not_to include(patient_user)
+        expect(described_class.admins).to include(admin_user)
+        expect(described_class.admins).not_to include(patient_user)
       end
     end
 
     describe '.patients' do
       it 'returns only patient users' do
-        expect(User.patients).to include(patient_user)
-        expect(User.patients).not_to include(admin_user)
+        expect(described_class.patients).to include(patient_user)
+        expect(described_class.patients).not_to include(admin_user)
       end
     end
   end

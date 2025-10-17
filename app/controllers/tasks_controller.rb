@@ -2,7 +2,7 @@
 
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: %i[show edit update destroy]
 
   def index
     authorize Task
@@ -41,6 +41,10 @@ class TasksController < ApplicationController
     authorize @task
   end
 
+  def edit
+    authorize @task
+  end
+
   def create
     @task = Task.new(task_params)
     @task.user = current_user
@@ -63,10 +67,6 @@ class TasksController < ApplicationController
         format.html { render :new, status: :unprocessable_content }
       end
     end
-  end
-
-  def edit
-    authorize @task
   end
 
   def update
@@ -116,7 +116,8 @@ class TasksController < ApplicationController
           render turbo_stream: [
             turbo_stream.replace("task_#{@task.id}", partial: 'tasks/task', locals: { task: @task }),
             turbo_stream.update('task-count', html: Task.pending.count),
-            turbo_stream.update('flash-messages', partial: 'shared/flash_messages', locals: { notice: 'Task marked as completed.' })
+            turbo_stream.update('flash-messages', partial: 'shared/flash_messages',
+                                                  locals: { notice: 'Task marked as completed.' })
           ]
         end
         format.html { redirect_to tasks_path, notice: 'Task marked as completed.' }
@@ -140,7 +141,8 @@ class TasksController < ApplicationController
           render turbo_stream: [
             turbo_stream.replace("task_#{@task.id}", partial: 'tasks/task', locals: { task: @task }),
             turbo_stream.update('task-count', html: Task.pending.count),
-            turbo_stream.update('flash-messages', partial: 'shared/flash_messages', locals: { notice: 'Task reopened.' })
+            turbo_stream.update('flash-messages', partial: 'shared/flash_messages',
+                                                  locals: { notice: 'Task reopened.' })
           ]
         end
         format.html { redirect_to tasks_path, notice: 'Task reopened.' }

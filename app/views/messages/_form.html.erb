@@ -12,13 +12,13 @@
 
   <div class="flex space-x-4">
     <div class="flex-1">
-      <%= form.text_area :content, 
-          placeholder: "Type your message here...", 
+      <%= form.text_area :content,
+          placeholder: "Type your message here...",
           rows: 3,
           class: "form-input resize-none" %>
     </div>
     <div class="w-32">
-      <%= form.select :message_type, 
+      <%= form.select :message_type,
           Message.message_types.keys.map { |type| [type.humanize, type] },
           { prompt: "Type" },
           class: "form-input" %>

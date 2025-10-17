@@ -6,7 +6,7 @@ class Message < ApplicationRecord
   belongs_to :user
 
   # Enums
-  enum message_type: { incoming: 'incoming', outgoing: 'outgoing' }
+  enum :message_type, { incoming: 'incoming', outgoing: 'outgoing' }
 
   # Validations
   validates :content, presence: true, length: { minimum: 1, maximum: 2000 }

@@ -7,7 +7,7 @@ class Patient < ApplicationRecord
   has_many :tasks, dependent: :destroy
 
   # Enums
-  enum status: { active: 'active', inactive: 'inactive' }
+  enum :status, { active: 'active', inactive: 'inactive' }
 
   # Validations
   validates :first_name, presence: true, length: { minimum: 2, maximum: 50 }

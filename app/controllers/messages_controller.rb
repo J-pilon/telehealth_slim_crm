@@ -3,7 +3,7 @@
 class MessagesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_patient
-  before_action :set_message, only: [:show, :edit, :update, :destroy]
+  before_action :set_message, only: %i[show edit update destroy]
 
   def index
     authorize Message
@@ -12,6 +12,10 @@ class MessagesController < ApplicationController
   end
 
   def show
+    authorize @message
+  end
+
+  def edit
     authorize @message
   end
 
@@ -25,14 +29,16 @@ class MessagesController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.prepend('messages-list', partial: 'messages/message', locals: { message: @message }),
-            turbo_stream.replace('message-form', partial: 'messages/form', locals: { message: @patient.messages.build, patient: @patient }),
+            turbo_stream.replace('message-form', partial: 'messages/form',
+                                                 locals: { message: @patient.messages.build, patient: @patient }),
             turbo_stream.update('message-count', html: @patient.messages.count)
           ]
         end
         format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully sent.' }
       else
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace('message-form', partial: 'messages/form', locals: { message: @message, patient: @patient })
+          render turbo_stream: turbo_stream.replace('message-form', partial: 'messages/form',
+                                                                    locals: { message: @message, patient: @patient })
         end
         format.html do
           @messages = policy_scope(@patient.messages.recent)
@@ -42,22 +48,21 @@ class MessagesController < ApplicationController
     end
   end
 
-  def edit
-    authorize @message
-  end
-
   def update
     authorize @message
 
     respond_to do |format|
       if @message.update(message_params)
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("message_#{@message.id}", partial: 'messages/message', locals: { message: @message })
+          render turbo_stream: turbo_stream.replace("message_#{@message.id}", partial: 'messages/message',
+                                                                              locals: { message: @message })
         end
         format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully updated.' }
       else
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("message_#{@message.id}", partial: 'messages/form', locals: { message: @message, patient: @patient })
+          render turbo_stream: turbo_stream.replace("message_#{@message.id}",
+                                                    partial: 'messages/form',
+                                                    locals: { message: @message, patient: @patient })
         end
         format.html { render :edit, status: :unprocessable_content }
       end

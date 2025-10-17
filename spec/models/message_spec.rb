@@ -4,22 +4,22 @@ require 'rails_helper'
 
 RSpec.describe Message, type: :model do
   describe 'validations' do
-    it { should validate_presence_of(:content) }
-    it { should validate_presence_of(:message_type) }
-    it { should validate_length_of(:content).is_at_least(1).is_at_most(2000) }
+    it { is_expected.to validate_presence_of(:content) }
+    it { is_expected.to validate_presence_of(:message_type) }
+    it { is_expected.to validate_length_of(:content).is_at_least(1).is_at_most(2000) }
   end
 
   describe 'enums' do
     it do
-      should define_enum_for(:message_type)
+      expect(subject).to define_enum_for(:message_type)
         .with_values(incoming: 'incoming', outgoing: 'outgoing')
         .backed_by_column_of_type(:string)
     end
   end
 
   describe 'associations' do
-    it { should belong_to(:patient) }
-    it { should belong_to(:user) }
+    it { is_expected.to belong_to(:patient) }
+    it { is_expected.to belong_to(:user) }
   end
 
   describe 'scopes' do
@@ -30,25 +30,25 @@ RSpec.describe Message, type: :model do
 
     describe '.recent' do
       it 'orders by created_at desc' do
-        Message.destroy_all # Clear existing data
+        described_class.destroy_all # Clear existing data
         message1 = create(:message, :recent)
-        message2 = create(:message, :old)
+        create(:message, :old)
 
-        expect(Message.recent.first).to eq(message1)
+        expect(described_class.recent.first).to eq(message1)
       end
     end
 
     describe '.incoming' do
       it 'returns only incoming messages' do
-        expect(Message.incoming).to include(incoming_message)
-        expect(Message.incoming).not_to include(outgoing_message)
+        expect(described_class.incoming).to include(incoming_message)
+        expect(described_class.incoming).not_to include(outgoing_message)
       end
     end
 
     describe '.outgoing' do
       it 'returns only outgoing messages' do
-        expect(Message.outgoing).to include(outgoing_message)
-        expect(Message.outgoing).not_to include(incoming_message)
+        expect(described_class.outgoing).to include(outgoing_message)
+        expect(described_class.outgoing).not_to include(incoming_message)
       end
     end
   end
