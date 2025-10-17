@@ -17,6 +17,13 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'default values' do
+    it 'defaults role to patient for new users' do
+      user = described_class.new(email: 'test@example.com', password: 'password')
+      expect(user.role).to eq('patient')
+    end
+  end
+
   describe 'scopes' do
     let!(:admin_user) { create(:user, :admin) }
     let!(:patient_user) { create(:user, :patient) }
