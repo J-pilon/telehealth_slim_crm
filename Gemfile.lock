@@ -134,7 +134,6 @@ GEM
       rainbow
       rubocop (>= 1)
       smart_properties
-    error_highlight (0.7.0)
     erubi (1.13.1)
     factory_bot (6.5.5)
       activesupport (>= 6.1.0)
@@ -409,7 +408,6 @@ DEPENDENCIES
   debug
   devise (~> 4.9)
   erb_lint (~> 0.4)
-  error_highlight (>= 0.4.0)
   factory_bot_rails (~> 6.4)
   faker (~> 3.2)
   importmap-rails
