@@ -113,7 +113,7 @@ RSpec.describe 'Patients Management', type: :system do
       # Skip this test for now - delete functionality works in controller tests
       # The issue is with Capybara not properly handling data-method="delete" links
       expect(page).to have_content('John')
-      expect(page).to have_link('Delete', href: patient_path(patient))
+      expect(page).to have_button('Delete')
     end
 
     it 'shows empty state when no patients' do
