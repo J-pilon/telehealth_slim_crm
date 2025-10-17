@@ -42,9 +42,9 @@ RSpec.describe TaskPolicy, type: :policy do
       expect(described_class.new(admin, task).update?).to be true
     end
 
-    it 'allows patients to update tasks' do
+    it 'does not allow patients to update tasks' do
       patient_task = create(:task, patient: patient_record)
-      expect(described_class.new(patient_user, patient_task).update?).to be true
+      expect(described_class.new(patient_user, patient_task).update?).to be false
     end
   end
 

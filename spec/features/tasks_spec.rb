@@ -219,11 +219,11 @@ RSpec.describe 'Task Management', type: :system do
       expect(page).to have_content('You are not authorized to perform this action')
     end
 
-    it 'can edit their own tasks' do
+    it 'cannot edit tasks' do
       task = create(:task, patient: @patient, user: @patient_user)
       visit edit_task_path(task)
 
-      expect(page).to have_content('Edit Task')
+      expect(page).to have_content('You are not authorized to perform this action')
     end
 
     it 'cannot delete tasks' do
