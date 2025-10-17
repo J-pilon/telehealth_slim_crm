@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   root "dashboard#index"
 
+  # Sidekiq web UI (admin only)
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   resources :patients do
     resources :messages, only: [:index, :show, :create, :edit, :update, :destroy]
     resources :tasks, only: [:index, :create, :update]

@@ -16,6 +16,9 @@ module TelehealthCrm
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    # Configure Sidekiq for background jobs
+    config.active_job.queue_adapter = :sidekiq
+
     config.generators do |g|
       g.helper false
       g.test_framework :rspec,

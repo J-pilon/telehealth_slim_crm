@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+# Sidekiq configuration file
+
+:concurrency: 5
+:queues:
+  - default
+  - mailers
+  - reminders
+
+:retry: 3
+:timeout: 8
+
+# Development configuration
+:development:
+  :concurrency: 2
+
+# Production configuration  
+:production:
+  :concurrency: 10
+  :retry: 5
