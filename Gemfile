@@ -2,10 +2,10 @@
 
 source 'https://rubygems.org'
 
-ruby '3.1.1'
+ruby '3.3.0'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.1.5', '>= 7.1.5.2'
+gem 'rails', '~> 7.2.2.2'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
@@ -62,25 +62,24 @@ gem 'sidekiq', '~> 7.0'
 # Pagination
 gem 'kaminari', '~> 1.2'
 
-# Testing
-gem 'factory_bot_rails', '~> 6.4', group: %i[development test]
-gem 'faker', '~> 3.2', group: %i[development test]
-gem 'pundit-matchers', '~> 3.1', group: %i[development test]
-gem 'rails-controller-testing', '~> 1.0', group: %i[development test]
-gem 'rspec-rails', '~> 6.0', group: %i[development test]
-gem 'shoulda-matchers', '~> 5.3', group: %i[development test]
-
-# Linting and security
-gem 'brakeman', '~> 6.0', group: %i[development test]
-gem 'erb_lint', '~> 0.4', group: %i[development test]
-gem 'rubocop-rails', '~> 2.25', group: %i[development test]
-gem 'rubocop-rspec', '~> 3.0', group: %i[development test]
-
 group :development, :test do
-  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mswin mswin64 mingw x64_mingw]
-  # Email preview in development
   gem 'letter_opener', '~> 1.8'
+
+  # Testing
+  gem 'factory_bot_rails', '~> 6.4'
+  gem 'faker', '~> 3.2'
+  gem 'pundit-matchers', '~> 3.1'
+  gem 'rails-controller-testing', '~> 1.0'
+  gem 'rspec-rails', '~> 6.0'
+  gem 'shoulda-matchers', '~> 5.3'
+
+  # Linting and security
+  gem 'brakeman', '~> 6.0'
+  gem 'bundle-audit'
+  gem 'erb_lint', '~> 0.4'
+  gem 'rubocop-rails', '~> 2.25'
+  gem 'rubocop-rspec', '~> 3.0'
 end
 
 group :development do
