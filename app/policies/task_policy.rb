@@ -15,7 +15,7 @@ class TaskPolicy < ApplicationPolicy
   end
 
   def update?
-    admin? || (patient? && user.patient?)
+    admin?
   end
 
   def destroy?
