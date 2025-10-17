@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   resources :patients do
     resources :messages, only: [:index, :show, :create, :edit, :update, :destroy]
     resources :tasks, only: [:index, :create, :update]
+    collection do
+      get :search
+    end
   end
 
   resources :tasks, only: [:index, :show, :new, :create, :edit, :update, :destroy] do

@@ -1,22 +1,20 @@
-<div id="task_<%= task.id %>" class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-  <div class="flex items-start justify-between">
+<div id="task_<%= task.id %>" class="p-4 rounded-lg border border-gray-200 transition-colors hover:bg-gray-50">
+  <div class="flex justify-between items-start">
     <div class="flex-1">
       <div class="flex items-center space-x-3">
         <!-- Status Checkbox -->
         <% if policy(task).complete? %>
-          <% if task.pending? %>
-            <%= form_with url: complete_task_path(task), method: :patch, local: true, class: "inline" do |form| %>
-              <%= form.submit "Mark Complete", 
-                  data: { confirm: 'Mark this task as completed?' },
-                  class: "flex-shrink-0 px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700" %>
+          <div class="flex-shrink-0">
+            <% if task.pending? %>
+              <%= form_with url: complete_task_path(task), method: :patch, local: false, class: "inline" do |form| %>
+                <%= form.submit "Mark Complete", class: "flex-shrink-0 px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700" %>
+              <% end %>
+            <% else %>
+              <%= form_with url: reopen_task_path(task), method: :patch, local: false, class: "inline" do |form| %>
+                <%= form.submit "Reopen", class: "flex-shrink-0 px-3 py-1 text-sm bg-gray-600 text-white rounded hover:bg-gray-700" %>
+              <% end %>
             <% end %>
-          <% else %>
-            <%= form_with url: reopen_task_path(task), method: :patch, local: true, class: "inline" do |form| %>
-              <%= form.submit "Reopen", 
-                  data: { confirm: 'Reopen this task?' },
-                  class: "flex-shrink-0 px-3 py-1 text-sm bg-gray-600 text-white rounded hover:bg-gray-700" %>
-            <% end %>
-          <% end %>
+          </div>
         <% end %>
 
         <!-- Task Content -->
@@ -29,11 +27,11 @@
               <%= task.status.capitalize %>
             </span>
             <% if task.overdue? %>
-              <span class="status-badge bg-red-100 text-red-800">
+              <span class="text-red-800 bg-red-100 status-badge">
                 Overdue
               </span>
             <% elsif task.due_today? %>
-              <span class="status-badge bg-yellow-100 text-yellow-800">
+              <span class="text-yellow-800 bg-yellow-100 status-badge">
                 Due Today
               </span>
             <% end %>
@@ -45,9 +43,9 @@
             </p>
           <% end %>
 
-          <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+          <div class="flex items-center mt-2 space-x-4 text-sm text-gray-500">
             <div class="flex items-center">
-              <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
               <%= link_to task.patient.full_name, patient_path(task.patient), 
@@ -55,7 +53,7 @@
             </div>
             
             <div class="flex items-center">
-              <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               Due: <%= task.due_date.strftime('%b %d, %Y') %>
@@ -63,7 +61,7 @@
 
             <% if task.completed? && task.completed_at.present? %>
               <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Completed: <%= task.completed_at.strftime('%b %d, %Y') %>
@@ -75,7 +73,7 @@
     </div>
 
     <!-- Actions -->
-    <div class="flex items-center space-x-2 ml-4">
+    <div class="flex items-center ml-4 space-x-2">
       <% if policy(task).show? %>
         <%= link_to "View", task_path(task), class: "text-blue-600 hover:text-blue-900 text-sm" %>
       <% end %>

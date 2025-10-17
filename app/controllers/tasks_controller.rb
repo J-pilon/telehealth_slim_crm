@@ -111,10 +111,12 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.update(status: 'completed')
+        @task.reload
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("task_#{@task.id}", partial: 'tasks/task', locals: { task: @task }),
-            turbo_stream.update('task-count', html: Task.pending.count)
+            turbo_stream.update('task-count', html: Task.pending.count),
+            turbo_stream.update('flash-messages', partial: 'shared/flash_messages', locals: { notice: 'Task marked as completed.' })
           ]
         end
         format.html { redirect_to tasks_path, notice: 'Task marked as completed.' }
@@ -133,10 +135,12 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.update(status: 'pending')
+        @task.reload
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("task_#{@task.id}", partial: 'tasks/task', locals: { task: @task }),
-            turbo_stream.update('task-count', html: Task.pending.count)
+            turbo_stream.update('task-count', html: Task.pending.count),
+            turbo_stream.update('flash-messages', partial: 'shared/flash_messages', locals: { notice: 'Task reopened.' })
           ]
         end
         format.html { redirect_to tasks_path, notice: 'Task reopened.' }

@@ -1,4 +1,9 @@
 <div class="space-y-6">
+  <!-- Flash Messages -->
+  <div id="flash-messages">
+    <%= render 'shared/flash_messages' %>
+  </div>
+
   <!-- Header -->
   <div class="flex justify-between items-center">
     <div>
@@ -12,12 +17,12 @@
   </div>
 
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-    <div class="bg-white shadow rounded-lg p-4">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-5">
+    <div class="p-4 bg-white rounded-lg shadow">
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-            <span class="text-white text-sm font-bold" id="task-count"><%= @stats[:pending_tasks] %></span>
+          <div class="flex justify-center items-center w-8 h-8 bg-blue-500 rounded-full">
+            <span class="text-sm font-bold text-white" id="task-count"><%= @stats[:pending_tasks] %></span>
           </div>
         </div>
         <div class="ml-3">
@@ -27,11 +32,11 @@
       </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-4">
+    <div class="p-4 bg-white rounded-lg shadow">
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-            <span class="text-white text-sm font-bold"><%= @stats[:completed_tasks] %></span>
+          <div class="flex justify-center items-center w-8 h-8 bg-green-500 rounded-full">
+            <span class="text-sm font-bold text-white"><%= @stats[:completed_tasks] %></span>
           </div>
         </div>
         <div class="ml-3">
@@ -41,11 +46,11 @@
       </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-4">
+    <div class="p-4 bg-white rounded-lg shadow">
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-            <span class="text-white text-sm font-bold"><%= @stats[:overdue_tasks] %></span>
+          <div class="flex justify-center items-center w-8 h-8 bg-red-500 rounded-full">
+            <span class="text-sm font-bold text-white"><%= @stats[:overdue_tasks] %></span>
           </div>
         </div>
         <div class="ml-3">
@@ -55,11 +60,11 @@
       </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-4">
+    <div class="p-4 bg-white rounded-lg shadow">
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-            <span class="text-white text-sm font-bold"><%= @stats[:due_today_tasks] %></span>
+          <div class="flex justify-center items-center w-8 h-8 bg-yellow-500 rounded-full">
+            <span class="text-sm font-bold text-white"><%= @stats[:due_today_tasks] %></span>
           </div>
         </div>
         <div class="ml-3">
@@ -69,11 +74,11 @@
       </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-4">
+    <div class="p-4 bg-white rounded-lg shadow">
       <div class="flex items-center">
         <div class="flex-shrink-0">
-          <div class="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
-            <span class="text-white text-sm font-bold"><%= @stats[:total_tasks] %></span>
+          <div class="flex justify-center items-center w-8 h-8 bg-gray-500 rounded-full">
+            <span class="text-sm font-bold text-white"><%= @stats[:total_tasks] %></span>
           </div>
         </div>
         <div class="ml-3">
@@ -85,7 +90,7 @@
   </div>
 
   <!-- Filters -->
-  <div class="bg-white shadow rounded-lg p-4">
+  <div class="p-4 bg-white rounded-lg shadow">
     <div class="flex flex-wrap gap-4">
       <%= link_to "All", tasks_path,
           class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-blue-100 text-blue-700' unless params[:status]}" %>
@@ -98,7 +103,7 @@
       <%= link_to "Due Today", tasks_path(status: 'due_today'),
           class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-yellow-100 text-yellow-700' if params[:status] == 'due_today'}" %>
 
-      <div class="ml-auto flex gap-2">
+      <div class="flex gap-2 ml-auto">
         <%= link_to "Sort by Due Date", tasks_path(sort: 'due_date'),
             class: "px-3 py-2 rounded-md text-sm font-medium #{'bg-blue-100 text-blue-700' if params[:sort] == 'due_date'}" %>
         <%= link_to "Sort by Recent", tasks_path(sort: 'recent'),
@@ -108,7 +113,7 @@
   </div>
 
   <!-- Tasks List -->
-  <div class="bg-white shadow rounded-lg">
+  <div class="bg-white rounded-lg shadow">
     <div class="px-4 py-5 sm:p-6">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold text-gray-900">Tasks</h3>
@@ -123,8 +128,8 @@
             <%= render 'task', task: task %>
           <% end %>
         <% else %>
-          <div class="text-center py-8 text-gray-500">
-            <div class="mx-auto h-12 w-12 text-gray-400 mb-4">
+          <div class="py-8 text-center text-gray-500">
+            <div class="mx-auto mb-4 w-12 h-12 text-gray-400">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
@@ -139,7 +144,7 @@
 
       <!-- Pagination -->
       <% if @tasks.respond_to?(:current_page) && @tasks.total_pages > 1 %>
-        <div class="mt-6 flex items-center justify-between border-t border-gray-200 sm:px-6">
+        <div class="flex justify-between items-center mt-6 border-t border-gray-200 sm:px-6">
           <%= paginate @tasks %>
         </div>
       <% end %>
