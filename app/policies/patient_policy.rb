@@ -7,7 +7,7 @@ class PatientPolicy < ApplicationPolicy
   end
 
   def show?
-    admin?
+    admin? || (user.patient? && record.user == user)
   end
 
   def create?
