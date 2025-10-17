@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Reset database and reseed with fresh data
+# Usage: bin/reset_db
+
+puts "🔄 Resetting database and reseeding..."
+
+# Drop, create, migrate, and seed
+system("bundle exec rails db:drop db:create db:migrate db:seed")
+
+if $?.success?
+  puts "✅ Database reset and seeded successfully!"
+  puts "🔑 You can now login with:"
+  puts "   Admin: admin@telehealth-crm.com / password123"
+  puts "   Patient: Check the seed output for patient email"
+else
+  puts "❌ Database reset failed!"
+  exit 1
+end
