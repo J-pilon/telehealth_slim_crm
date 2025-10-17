@@ -62,7 +62,7 @@ RSpec.describe PatientsController, type: :controller do
       it 'redirects with unauthorized message' do
         get :index
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq("You are not authorized to perform this action.")
+        expect(flash[:alert]).to eq('You are not authorized to perform this action.')
       end
     end
   end
@@ -141,7 +141,7 @@ RSpec.describe PatientsController, type: :controller do
       it 'redirects with unauthorized message' do
         get :new
         expect(response).to redirect_to(root_path)
-        expect(flash[:alert]).to eq("You are not authorized to perform this action.")
+        expect(flash[:alert]).to eq('You are not authorized to perform this action.')
       end
     end
   end
@@ -171,9 +171,9 @@ RSpec.describe PatientsController, type: :controller do
 
       context 'with valid attributes' do
         it 'creates a new patient' do
-          expect {
+          expect do
             post :create, params: { patient: valid_attributes }
-          }.to change(Patient, :count).by(1)
+          end.to change(Patient, :count).by(1)
         end
 
         it 'redirects to the patient' do
@@ -191,9 +191,9 @@ RSpec.describe PatientsController, type: :controller do
         let(:invalid_attributes) { { first_name: '' } }
 
         it 'does not create a new patient' do
-          expect {
+          expect do
             post :create, params: { patient: invalid_attributes }
-          }.not_to change(Patient, :count)
+          end.not_to change(Patient, :count)
         end
 
         it 'renders the new template' do
@@ -285,17 +285,17 @@ RSpec.describe PatientsController, type: :controller do
     end
 
     context 'when user is authenticated as admin' do
-      before {
+      before do
         sign_in admin
         Patient.destroy_all # Clear existing data
-      }
+      end
 
       it 'destroys the patient' do
         test_patient = create(:patient) # Create patient after clearing database
 
-        expect {
+        expect do
           delete :destroy, params: { id: test_patient.id }
-        }.to change(Patient, :count).by(-1)
+        end.to change(Patient, :count).by(-1)
 
         expect(response).to redirect_to(patients_path)
         expect(flash[:notice]).to eq('Patient was successfully deleted.')

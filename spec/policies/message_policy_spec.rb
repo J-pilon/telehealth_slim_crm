@@ -11,51 +11,51 @@ RSpec.describe MessagePolicy, type: :policy do
 
   describe '#index?' do
     it 'allows logged in users' do
-      expect(MessagePolicy.new(admin, Message).index?).to be true
-      expect(MessagePolicy.new(patient_user, Message).index?).to be true
+      expect(described_class.new(admin, Message).index?).to be true
+      expect(described_class.new(patient_user, Message).index?).to be true
     end
   end
 
   describe '#show?' do
     it 'allows admins to view any message' do
-      expect(MessagePolicy.new(admin, message).show?).to be true
+      expect(described_class.new(admin, message).show?).to be true
     end
 
     it 'allows patients to view messages' do
       patient_message = create(:message, patient: patient_record, user: patient_user)
-      expect(MessagePolicy.new(patient_user, patient_message).show?).to be true
+      expect(described_class.new(patient_user, patient_message).show?).to be true
     end
   end
 
   describe '#create?' do
     it 'allows logged in users' do
-      expect(MessagePolicy.new(admin, Message).create?).to be true
-      expect(MessagePolicy.new(patient_user, Message).create?).to be true
+      expect(described_class.new(admin, Message).create?).to be true
+      expect(described_class.new(patient_user, Message).create?).to be true
     end
   end
 
   describe '#update?' do
     it 'allows admins to update any message' do
-      expect(MessagePolicy.new(admin, message).update?).to be true
+      expect(described_class.new(admin, message).update?).to be true
     end
 
     it 'allows patients to update their own messages' do
       patient_message = create(:message, patient: patient_record, user: patient_user)
-      expect(MessagePolicy.new(patient_user, patient_message).update?).to be true
+      expect(described_class.new(patient_user, patient_message).update?).to be true
     end
 
     it 'denies patients from updating other users messages' do
-      expect(MessagePolicy.new(patient_user, message).update?).to be false
+      expect(described_class.new(patient_user, message).update?).to be false
     end
   end
 
   describe '#destroy?' do
     it 'allows admins' do
-      expect(MessagePolicy.new(admin, message).destroy?).to be true
+      expect(described_class.new(admin, message).destroy?).to be true
     end
 
     it 'denies patients' do
-      expect(MessagePolicy.new(patient_user, message).destroy?).to be false
+      expect(described_class.new(patient_user, message).destroy?).to be false
     end
   end
 

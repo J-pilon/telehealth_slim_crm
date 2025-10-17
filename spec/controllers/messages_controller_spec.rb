@@ -204,7 +204,8 @@ RSpec.describe MessagesController, type: :controller do
         end
 
         it 'responds with turbo stream' do
-          patch :update, params: { patient_id: @patient.id, id: @message.id, message: new_attributes }, format: :turbo_stream
+          patch :update, params: { patient_id: @patient.id, id: @message.id, message: new_attributes },
+                         format: :turbo_stream
           expect(response.content_type).to include('text/vnd.turbo-stream.html')
         end
 
@@ -216,12 +217,14 @@ RSpec.describe MessagesController, type: :controller do
 
       context 'with invalid parameters' do
         it 'responds with turbo stream for errors' do
-          patch :update, params: { patient_id: @patient.id, id: @message.id, message: invalid_attributes }, format: :turbo_stream
+          patch :update, params: { patient_id: @patient.id, id: @message.id, message: invalid_attributes },
+                         format: :turbo_stream
           expect(response.content_type).to include('text/vnd.turbo-stream.html')
         end
 
         it 'renders the edit template for HTML format' do
-          patch :update, params: { patient_id: @patient.id, id: @message.id, message: invalid_attributes }, format: :html
+          patch :update, params: { patient_id: @patient.id, id: @message.id, message: invalid_attributes },
+                         format: :html
           expect(response).to render_template(:edit)
         end
       end

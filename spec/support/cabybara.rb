@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'selenium/webdriver'
 
 Capybara.register_driver :selenium_chrome_headless do |app|
@@ -15,7 +17,7 @@ RSpec.configure do |config|
   end
 
   # Optional: Allow switching to headful mode for debugging
-  config.before(:each, type: :system, js: true) do
+  config.before(:each, :js, type: :system) do
     if ENV['SELENIUM_HEADFUL']
       driven_by :selenium_chrome
     else
