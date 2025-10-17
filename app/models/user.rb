@@ -9,6 +9,9 @@ class User < ApplicationRecord
   # Role enum
   enum :role, { admin: 'admin', patient: 'patient' }
 
+  # Associations
+  has_one :patient, dependent: :destroy
+
   # Validations
   validates :role, presence: true
 

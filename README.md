@@ -10,7 +10,7 @@ A minimal CRM skeleton built with Rails 7, designed for healthcare providers to 
 - **Task Management** - Shared task queue with completion tracking
 - **Real-time Updates** - Hotwire Turbo Streams for seamless UX
 - **Responsive Design** - Tailwind CSS for modern, mobile-friendly interface
-- **Background Jobs** - Sidekiq for email notifications and reminders
+- **Background Jobs** - Sidekiq for email notifications
 - **Comprehensive Testing** - RSpec with 341+ tests including feature tests
 - **CI/CD Pipeline** - GitHub Actions with automated testing and security checks
 
@@ -277,9 +277,6 @@ config/
 ### WelcomeEmailJob
 Sends welcome email to new patients when they're created.
 
-### TaskReminderJob
-Sends daily reminders to admins about overdue tasks.
-
 ## Configuration
 
 ### Environment Variables
@@ -322,21 +319,6 @@ docker build -t telehealth-crm .
 docker run -p 3000:3000 telehealth-crm
 ```
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-
-- Write tests for new features
-- Follow the existing code style
-- Run the full test suite before submitting
-- Update documentation as needed
-
 ## Testing
 
 The application includes comprehensive test coverage:
@@ -353,18 +335,6 @@ The application includes comprehensive test coverage:
 - **Feature Tests** - End-to-end user workflows
 - **Policy Tests** - Authorization rules
 - **Golden Path Test** - Complete user journey
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For support and questions:
-
-1. Check the [Issues](https://github.com/your-username/telehealth-crm/issues) page
-2. Review the documentation
-3. Run the test suite to verify your setup
 
 ## Changelog
 

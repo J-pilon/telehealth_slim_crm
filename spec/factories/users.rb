@@ -13,6 +13,10 @@ FactoryBot.define do
 
     trait :patient do
       role { 'patient' }
+
+      after(:create) do |user|
+        create(:patient, user: user, email: user.email)
+      end
     end
   end
 end

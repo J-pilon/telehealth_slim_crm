@@ -211,8 +211,6 @@ View Update ← Turbo Stream ← Background Job ← Sidekiq ← Redis
 **Stimulus Controllers:**
 - `patient_search_controller.js` - Search with debounce
 - `notification_controller.js` - Flash message handling
-- `message_form_controller.js` - Form auto-clear (removed)
-- `task_controller.js` - Task interactions (removed)
 
 ### Real-Time Flow
 
@@ -232,7 +230,6 @@ Turbo Stream Response → DOM Update → User Sees Change
 
 **Jobs:**
 - `WelcomeEmailJob` - Send welcome email to new patients
-- `TaskReminderJob` - Daily overdue task notifications
 
 ### Job Processing Flow
 
