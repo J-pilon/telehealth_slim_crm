@@ -8,10 +8,10 @@ puts '🌱 Starting seed data creation...'
 
 # Clear existing data
 puts '🧹 Clearing existing data...'
-User.destroy_all
-Patient.destroy_all
-Message.destroy_all
 Task.destroy_all
+Message.destroy_all
+Patient.destroy_all
+User.destroy_all
 
 # Create Admin Users
 puts '👨‍💼 Creating admin users...'
@@ -36,24 +36,45 @@ end
 
 puts "✅ Created #{User.admins.count} admin users"
 
-# Create Patient Users
-puts '👥 Creating patient users...'
+# Create Patient Users with associated Patient records
+puts '👥 Creating patient users with patient records...'
 patient_users = []
+patients = []
+
 10.times do
-  patient_users << User.create!(
-    email: Faker::Internet.unique.email,
+  first_name = Faker::Name.first_name
+  last_name = Faker::Name.last_name
+  email = Faker::Internet.unique.email
+
+  # Create patient user
+  patient_user = User.create!(
+    email: email,
     password: 'password123',
     password_confirmation: 'password123',
     role: 'patient'
   )
+
+  # Create associated patient record
+  patient = Patient.create!(
+    user: patient_user,
+    first_name: first_name,
+    last_name: last_name,
+    email: email,
+    phone: Faker::PhoneNumber.subscriber_number(length: 10),
+    date_of_birth: Faker::Date.birthday(min_age: 18, max_age: 90),
+    medical_record_number: "MR#{Faker::Number.unique.between(from: 10_000_000, to: 99_999_999)}",
+    status: %w[active inactive].sample
+  )
+
+  patient_users << patient_user
+  patients << patient
 end
 
-puts "✅ Created #{User.patients.count} patient users"
+puts "✅ Created #{User.patients.count} patient users with associated patient records"
 
-# Create Patients
-puts '🏥 Creating patients...'
-patients = []
-25.times do
+# Create additional patients without user accounts (for admin management)
+puts '🏥 Creating additional patients for admin management...'
+15.times do
   patients << Patient.create!(
     first_name: Faker::Name.first_name,
     last_name: Faker::Name.last_name,
@@ -91,7 +112,14 @@ patients.each do |patient|
   message_count.times do |i|
     # Alternate between incoming and outgoing messages
     message_type = i.even? ? 'incoming' : 'outgoing'
-    user = message_type == 'incoming' ? User.patients.sample : admin
+    # For incoming messages, use the patient's user if they have one, otherwise use a random patient user
+    user = if message_type == 'incoming' && patient.user
+             patient.user
+           elsif message_type == 'incoming'
+             User.patients.sample
+           else
+             admin
+           end
 
     Message.create!(
       patient: patient,
