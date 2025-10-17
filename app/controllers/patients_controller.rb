@@ -57,6 +57,24 @@ class PatientsController < ApplicationController
     redirect_to patients_path, notice: 'Patient was successfully deleted.'
   end
 
+  def search
+    authorize Patient
+    query = params[:q]
+
+    if query.present?
+      @patients = Patient.where(
+        "first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ? OR medical_record_number ILIKE ?",
+        "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%"
+      ).limit(10)
+    else
+      @patients = []
+    end
+
+    respond_to do |format|
+      format.json { render json: @patients.map { |p| { id: p.id, full_name: p.full_name, email: p.email, medical_record_number: p.medical_record_number, status: p.status } } }
+    end
+  end
+
   private
 
   def set_patient
