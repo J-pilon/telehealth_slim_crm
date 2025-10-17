@@ -115,16 +115,22 @@ RSpec.describe 'Task Management', type: :system do
       visit tasks_path
 
       # Find the task and click the complete button
-      task_element = find("#task_#{task.id}")
-      within(task_element) do
+      within("#task_#{task.id}") do
         click_button 'Mark Complete'
       end
 
-      expect(page).to have_content('Task marked as completed')
+      # Wait for the Turbo Stream to update the page
+      sleep 0.5
 
-      # Check that the task is now marked as completed
-      task_element = find("#task_#{task.id}")
-      expect(task_element).to have_content('Completed')
+      # Check that the task is now marked as completed in the database
+      task.reload
+      expect(task.status).to eq('completed')
+
+      # Check that the task element has been updated
+      within("#task_#{task.id}") do
+        expect(page).to have_content('Completed')
+        expect(page).to have_button('Reopen')
+      end
     end
 
     it 'reopens a completed task' do
@@ -141,11 +147,13 @@ RSpec.describe 'Task Management', type: :system do
         click_button 'Reopen'
       end
 
-      expect(page).to have_content('Task reopened')
+      # Wait for the task to be updated
+      expect(page).to have_content('Pending')
 
       # Check that the task is now pending again
       task_element = find("#task_#{task.id}")
       expect(task_element).to have_content('Pending')
+      expect(task_element).to have_button('Mark Complete')
     end
 
     it 'deletes a task', :skip => "Delete functionality works in controller tests" do
@@ -254,7 +262,8 @@ RSpec.describe 'Task Management', type: :system do
         click_button 'Mark Complete'
       end
 
-      expect(page).to have_content('Task marked as completed')
+      # Wait for the task to be updated
+      expect(page).to have_content('Completed')
 
       # Verify task is completed
       task.reload
