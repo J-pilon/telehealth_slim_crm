@@ -106,7 +106,7 @@ RSpec.describe 'Patients Management', type: :system do
     end
 
     it 'deletes a patient' do
-      patient = create(:patient, first_name: 'John')
+      create(:patient, first_name: 'John')
 
       visit patients_path
 
