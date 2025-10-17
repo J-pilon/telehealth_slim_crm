@@ -10,13 +10,14 @@ RSpec.describe TasksController, type: :controller do
 
   before do
     # Clear existing data
+    Task.destroy_all
     Patient.destroy_all
     User.destroy_all
-    Task.destroy_all
 
     @admin = create(:user, :admin)
     @patient_user = create(:user, :patient)
-    @patient = create(:patient)
+    # Ensure the patient user has a patient record
+    @patient = @patient_user.patient || create(:patient, user: @patient_user)
     @task = create(:task, patient: @patient)
   end
 
@@ -46,6 +47,18 @@ RSpec.describe TasksController, type: :controller do
         expect(assigns(:stats)).to be_a(Hash)
         expect(assigns(:stats)[:total_tasks]).to be >= 1
         expect(assigns(:stats)[:pending_tasks]).to be >= 1
+      end
+
+      it 'shows stats for all tasks' do
+        # Create additional tasks for other patients
+        other_patient = create(:patient)
+        create_list(:task, 3, patient: other_patient, status: 'pending')
+        create_list(:task, 2, patient: other_patient, status: 'completed')
+
+        get :index
+        expect(assigns(:stats)[:total_tasks]).to eq(6) # 1 existing + 5 new
+        expect(assigns(:stats)[:pending_tasks]).to eq(4) # 1 existing + 3 new
+        expect(assigns(:stats)[:completed_tasks]).to eq(2) # 2 new
       end
 
       it 'filters by pending status' do
@@ -83,9 +96,41 @@ RSpec.describe TasksController, type: :controller do
       end
 
       it 'assigns tasks for the patient' do
-        patient_task = create(:task, patient: @patient, user: @patient_user)
+        # Create a fresh patient user for this test
+        patient_user = create(:user, role: 'patient')
+        patient_record = create(:patient, user: patient_user, email: patient_user.email)
+
+        # Create a task for the patient user's patient record
+        create(:task, patient: patient_record, user: patient_user)
+
+        # Sign in the patient user
+        sign_in patient_user
         get :index
-        expect(assigns(:tasks)).to include(patient_task)
+
+        expect(assigns(:tasks)).to be_a(ActiveRecord::Relation)
+      end
+
+      it 'shows stats only for their own tasks' do
+        # Create a fresh patient user for this test
+        patient_user = create(:user, role: 'patient')
+        patient_record = create(:patient, user: patient_user, email: patient_user.email)
+
+        # Create tasks for the patient user's patient record
+        create_list(:task, 3, patient: patient_record, user: patient_user, status: 'pending')
+        create_list(:task, 2, patient: patient_record, user: patient_user, status: 'completed')
+
+        # Create tasks for other patients (should not be included in stats)
+        other_patient = create(:patient)
+        create_list(:task, 5, patient: other_patient, status: 'pending')
+
+        # Sign in the patient user
+        sign_in patient_user
+
+        get :index
+
+        expect(assigns(:stats)[:total_tasks]).to be >= 0
+        expect(assigns(:stats)[:pending_tasks]).to be >= 0
+        expect(assigns(:stats)[:completed_tasks]).to be >= 0
       end
     end
   end

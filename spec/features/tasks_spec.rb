@@ -30,7 +30,7 @@ RSpec.describe 'Task Management', type: :system do
       visit tasks_path
 
       expect(page).to have_content('Task Queue')
-      expect(page).to have_content('Manage and track all tasks across patients')
+      expect(page).to have_content('Manage and track your tasks')
       expect(page).to have_content('Pending')
       expect(page).to have_content('Completed')
       expect(page).to have_content('Overdue')
