@@ -21,13 +21,14 @@ class TasksController < ApplicationController
     # Pagination
     @tasks = @tasks.page(params[:page]).per(20)
 
-    # Stats for dashboard
+    # Stats for dashboard - use scoped tasks
+    scoped_tasks = policy_scope(Task)
     @stats = {
-      total_tasks: Task.count,
-      pending_tasks: Task.pending.count,
-      completed_tasks: Task.completed.count,
-      overdue_tasks: Task.overdue.count,
-      due_today_tasks: Task.due_today.count
+      total_tasks: scoped_tasks.count,
+      pending_tasks: scoped_tasks.pending.count,
+      completed_tasks: scoped_tasks.completed.count,
+      overdue_tasks: scoped_tasks.overdue.count,
+      due_today_tasks: scoped_tasks.due_today.count
     }
   end
 
