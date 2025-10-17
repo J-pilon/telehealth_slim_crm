@@ -27,8 +27,8 @@ RSpec.describe 'Stimulus Controllers', type: :system do
       search_input = find('input[data-patient-search-target="input"]')
       expect(search_input).to be_present
 
-      # Check that the results container exists
-      results_container = find('[data-patient-search-target="results"]')
+      # Check that the results container exists (it's hidden by default)
+      results_container = find('[data-patient-search-target="results"]', visible: false)
       expect(results_container).to be_present
     end
 
@@ -52,8 +52,8 @@ RSpec.describe 'Stimulus Controllers', type: :system do
       notification_container = find('[data-controller="notification"]')
       expect(notification_container).to be_present
 
-      # Check that the message element exists
-      message_element = find('[data-notification-target="message"]')
+      # Check that the message element exists (it's hidden by default)
+      message_element = find('[data-notification-target="message"]', visible: false)
       expect(message_element).to be_present
     end
   end
