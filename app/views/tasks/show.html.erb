@@ -14,7 +14,7 @@
   </div>
 
   <!-- Task Details -->
-  <div class="bg-white shadow rounded-lg">
+  <div class="bg-white rounded-lg shadow">
     <div class="px-4 py-5 sm:p-6">
       <div class="space-y-4">
         <div>
@@ -36,11 +36,11 @@
               <%= @task.status.capitalize %>
             </span>
             <% if @task.overdue? %>
-              <span class="status-badge bg-red-100 text-red-800 ml-2">
+              <span class="ml-2 text-red-800 bg-red-100 status-badge">
                 Overdue
               </span>
             <% elsif @task.due_today? %>
-              <span class="status-badge bg-yellow-100 text-yellow-800 ml-2">
+              <span class="ml-2 text-yellow-800 bg-yellow-100 status-badge">
                 Due Today
               </span>
             <% end %>
@@ -74,7 +74,7 @@
       </div>
 
       <!-- Actions -->
-      <div class="mt-6 flex space-x-3">
+      <div class="flex mt-6 space-x-3">
         <% if policy(@task).update? %>
           <% if @task.pending? %>
             <%= link_to "Mark Complete", complete_task_path(@task),

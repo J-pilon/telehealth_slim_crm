@@ -88,7 +88,9 @@ RSpec.describe 'Dashboard', type: :system do
       visit root_path
 
       expect(page).to have_content('Send Message')
+      expect(page).to have_link('Send Message', href: patient_messages_path(patient_user.patient))
       expect(page).to have_content('View My Profile')
+      expect(page).to have_link('View My Profile', href: patient_path(patient_user.patient))
     end
   end
 
@@ -112,10 +114,10 @@ RSpec.describe 'Dashboard', type: :system do
       expect(page).to have_content('Admin')
     end
 
-    it 'has sign out link' do
+    it 'has sign out button' do
       visit root_path
 
-      expect(page).to have_link('Sign Out')
+      expect(page).to have_button('Sign Out')
     end
   end
 end

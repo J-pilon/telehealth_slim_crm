@@ -111,11 +111,8 @@
                   <div class="flex space-x-2">
                     <%= link_to "View", patient_path(patient), class: "text-blue-600 hover:text-blue-900" %>
                     <%= link_to "Edit", edit_patient_path(patient), class: "text-indigo-600 hover:text-indigo-900" %>
-                    <%= link_to "Delete", patient_path(patient),
-                        data: {
-                          method: :delete,
-                          confirm: 'Are you sure?'
-                        },
+                    <%= button_to "Delete", patient_path(patient),
+                        method: :delete,
                         class: "text-red-600 hover:text-red-900" %>
                   </div>
                 </td>
