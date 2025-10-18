@@ -176,6 +176,31 @@ RSpec.describe PatientsController, type: :controller do
           end.to change(Patient, :count).by(1)
         end
 
+        it 'creates an associated user account' do
+          expect do
+            post :create, params: { patient: valid_attributes }
+          end.to change(User, :count).by(1)
+
+          patient = Patient.last
+          expect(patient.user).to be_present
+          expect(patient.user.email).to eq(valid_attributes[:email])
+          expect(patient.user.role).to eq('patient')
+        end
+
+        it 'generates a password reset token for the user' do
+          post :create, params: { patient: valid_attributes }
+
+          user = User.last
+          expect(user.reset_password_token).to be_present
+          expect(user.reset_password_sent_at).to be_present
+        end
+
+        it 'enqueues a welcome email job with reset token' do
+          expect do
+            post :create, params: { patient: valid_attributes }
+          end.to have_enqueued_job(WelcomeEmailJob).with(kind_of(Integer), kind_of(String))
+        end
+
         it 'redirects to the patient' do
           post :create, params: { patient: valid_attributes }
           expect(response).to redirect_to(Patient.last)
