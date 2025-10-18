@@ -88,6 +88,15 @@
         <% else %>
           <p class="text-gray-500">No messages yet</p>
         <% end %>
+
+        <!-- Quick Message Form -->
+        <div class="pt-4 mt-4 border-t border-gray-200">
+          <turbo-frame id="quick_message_form">
+            <% if policy(Message).create? %>
+              <%= link_to "New Message", new_patient_message_path(@patient, frame_id: "quick_message_form"), data: { "turbo-frame": "quick_message_form" }, class: "btn-primary w-full text-center" %>
+            <% end %>
+          </turbo-frame>
+        </div>
       </div>
     </div>
 

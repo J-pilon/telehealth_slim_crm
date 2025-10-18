@@ -1,0 +1,5 @@
+<% frame_id = params[:frame_id] || "message_form" %>
+<%= turbo_stream.replace frame_id do %>
+  <%= render "form", message: @message, patient: @patient, frame_id: frame_id %>
+<% end %>
+

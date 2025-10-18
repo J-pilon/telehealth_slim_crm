@@ -68,22 +68,25 @@ RSpec.describe 'Messages Management', type: :system do
       message = create(:message, :outgoing, patient: @patient, user: @admin, content: 'Original message')
 
       visit patient_messages_path(@patient)
-      click_link 'Edit', href: edit_patient_message_path(@patient, message)
+      click_link 'Edit'
 
-      fill_in 'message[content]', with: 'Updated message content'
-      click_button 'Send Message'
+      within("#message_#{message.id}") do
+        fill_in 'message[content]', with: 'Updated message content'
+        select 'Outgoing', from: 'message[message_type]'
+        click_button 'Update'
+      end
 
       expect(page).to have_content('Message was successfully updated.')
       expect(page).to have_content('Updated message content')
     end
 
-    it 'shows delete link for messages' do
-      message = create(:message, :outgoing, patient: @patient, user: @admin, content: 'Message to delete')
+    it 'shows delete button for messages' do
+      create(:message, :outgoing, patient: @patient, user: @admin, content: 'Message to delete')
 
       visit patient_messages_path(@patient)
 
       expect(page).to have_content('Message to delete')
-      expect(page).to have_link('Delete', href: patient_message_path(@patient, message))
+      expect(page).to have_button('Delete')
     end
 
     it 'displays message types with different styling' do

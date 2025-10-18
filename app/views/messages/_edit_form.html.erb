@@ -1,0 +1,38 @@
+<div class="flex <%= message.outgoing? ? 'justify-end' : 'justify-start' %>">
+  <div class="px-4 py-3 max-w-lg bg-white rounded-lg border-2 border-blue-500">
+    <%= form_with(model: [patient, message], class: "space-y-3") do |form| %>
+      <% if message.errors.any? %>
+        <div id="error_explanation" class="px-3 py-2 text-xs text-red-700 bg-red-50 rounded border border-red-200">
+          <h2 class="font-bold"><%= pluralize(message.errors.count, "error") %>:</h2>
+          <ul class="mt-1 list-disc list-inside">
+            <% message.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= form.label :content, class: "block text-xs font-medium text-gray-700" %>
+        <%= form.text_area :content,
+            rows: 3,
+            class: "mt-1 form-input text-sm" %>
+      </div>
+
+      <div>
+        <%= form.label :message_type, "Type", class: "block text-xs font-medium text-gray-700" %>
+        <%= form.select :message_type,
+            Message.message_types.keys.map { |type| [type.humanize, type] },
+            {},
+            class: "mt-1 form-input text-sm" %>
+      </div>
+
+      <div class="flex justify-end space-x-2">
+        <%= link_to "Cancel", patient_messages_path(patient),
+            data: { "turbo-frame": "_top" },
+            class: "btn-secondary text-xs py-1 px-3" %>
+        <%= form.submit "Update", class: "btn-primary text-xs py-1 px-3" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -12,7 +12,7 @@
     </div>
     <div class="flex space-x-3">
       <% if policy(Task).create? %>
-        <%= link_to "New Task", new_task_path, class: "btn-primary" %>
+        <%= link_to "New Task", new_task_path, data: { turbo_frame: "task_form" }, class: "btn-primary" %>
       <% end %>
       <% if policy(Patient).index? %>
         <%= link_to "All Patients", patients_path, class: "btn-secondary" %>
@@ -116,44 +116,65 @@
     </div>
   </div>
 
-  <!-- Tasks List -->
-  <div class="bg-white rounded-lg shadow">
-    <div class="px-4 py-5 sm:p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold text-gray-900">Tasks</h3>
-        <span class="text-sm text-gray-500">
-          <%= pluralize(@tasks.count, 'task') %>
-        </span>
-      </div>
+  <!-- Tasks List and Detail View Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Tasks List (Left Column) -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-lg shadow">
+        <div class="px-4 py-5 sm:p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Tasks</h3>
+            <span class="text-sm text-gray-500">
+              <%= pluralize(@tasks.count, 'task') %>
+            </span>
+          </div>
 
-      <div id="tasks-list" class="space-y-4">
-        <% if @tasks.any? %>
-          <% @tasks.each do |task| %>
-            <%= render 'task', task: task %>
-          <% end %>
-        <% else %>
-          <div class="py-8 text-center text-gray-500">
-            <div class="mx-auto mb-4 w-12 h-12 text-gray-400">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-            </div>
-            <p>No tasks found</p>
-            <div class="mt-4">
-              <% if policy(Task).create? %>
-                <%= link_to "Create New Task", new_task_path, class: "btn-primary" %>
+          <!-- Inline Form Frame -->
+          <turbo-frame id="task_form"></turbo-frame>
+
+          <div id="tasks" class="mt-4 space-y-4">
+            <% if @tasks.any? %>
+              <% @tasks.each do |task| %>
+                <%= render 'task', task: task %>
               <% end %>
+            <% else %>
+              <div class="py-8 text-center text-gray-500">
+                <div class="mx-auto mb-4 w-12 h-12 text-gray-400">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </div>
+                <p>No tasks found</p>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Pagination -->
+          <% if @tasks.respond_to?(:current_page) && @tasks.total_pages > 1 %>
+            <div class="flex justify-between items-center mt-6 border-t border-gray-200 sm:px-6">
+              <%= paginate @tasks %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Detail Panel (Right Column) -->
+    <div class="lg:col-span-1">
+      <div class="sticky top-6">
+        <turbo-frame id="task_detail">
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="text-center text-gray-500 py-8">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <p class="mt-4">Select a task to view details</p>
+              </div>
             </div>
           </div>
-        <% end %>
+        </turbo-frame>
       </div>
-
-      <!-- Pagination -->
-      <% if @tasks.respond_to?(:current_page) && @tasks.total_pages > 1 %>
-        <div class="flex justify-between items-center mt-6 border-t border-gray-200 sm:px-6">
-          <%= paginate @tasks %>
-        </div>
-      <% end %>
     </div>
   </div>
 </div>

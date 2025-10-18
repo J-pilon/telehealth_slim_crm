@@ -1,0 +1,34 @@
+<% frame_id = params[:frame_id] || "message_form" %>
+<% if @message.persisted? %>
+  <% if frame_id == "message_form" %>
+    <%= turbo_stream.prepend "messages-list" do %>
+      <%= render "message", message: @message, patient: @patient %>
+    <% end %>
+
+    <%= turbo_stream.update "message-count" do %>
+      <%= pluralize(@patient.messages.count, 'message') %>
+    <% end %>
+  <% end %>
+
+  <%= turbo_stream.replace frame_id do %>
+    <turbo-frame id="<%= frame_id %>">
+      <% if frame_id == "quick_message_form" %>
+        <div class="p-4 text-center bg-green-50 rounded-lg border border-green-200">
+          <p class="text-sm font-medium text-green-700">Message sent successfully!</p>
+          <%= link_to "Send Another", new_patient_message_path(@patient, frame_id: frame_id), data: { "turbo-frame": frame_id }, class: "mt-2 btn-primary w-full text-center" %>
+        </div>
+      <% else %>
+        <%= link_to "New Message", new_patient_message_path(@patient, frame_id: frame_id), data: { "turbo-frame": frame_id }, class: "btn-primary" %>
+      <% end %>
+    </turbo-frame>
+  <% end %>
+
+  <%= turbo_stream.update "flash-messages" do %>
+    <%= render "shared/flash_messages", notice: "Message was successfully sent." %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace frame_id do %>
+    <%= render "form", message: @message, patient: @patient, frame_id: frame_id %>
+  <% end %>
+<% end %>
+

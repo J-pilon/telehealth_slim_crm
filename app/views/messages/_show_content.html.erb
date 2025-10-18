@@ -1,0 +1,46 @@
+<div class="flex <%= message.outgoing? ? 'justify-end' : 'justify-start' %>">
+  <div class="max-w-lg px-4 py-3 rounded-lg <%= message.outgoing? ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900' %>">
+    <div class="space-y-2">
+      <div>
+        <p class="text-sm font-semibold <%= message.outgoing? ? 'text-blue-100' : 'text-gray-600' %>">Message Details</p>
+        <p class="mt-1 text-sm"><%= message.content %></p>
+      </div>
+
+      <div class="pt-2 border-t <%= message.outgoing? ? 'border-blue-400' : 'border-gray-300' %>">
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <p class="<%= message.outgoing? ? 'text-blue-100' : 'text-gray-500' %>">Type:</p>
+            <p class="font-medium"><%= message.message_type.humanize %></p>
+          </div>
+          <div>
+            <p class="<%= message.outgoing? ? 'text-blue-100' : 'text-gray-500' %>">From:</p>
+            <p class="font-medium"><%= message.sender_name %></p>
+          </div>
+          <div class="col-span-2">
+            <p class="<%= message.outgoing? ? 'text-blue-100' : 'text-gray-500' %>">Sent:</p>
+            <p class="font-medium"><%= message.formatted_created_at %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between mt-2 pt-2 border-t <%= message.outgoing? ? 'border-blue-400' : 'border-gray-300' %>">
+        <div class="flex space-x-2">
+          <%= link_to "Collapse", patient_messages_path(patient),
+              data: { "turbo-frame": "_top" },
+              class: "text-xs #{message.outgoing? ? 'text-blue-100 hover:text-white' : 'text-gray-500 hover:text-gray-700'}" %>
+          <% if policy(message).update? %>
+            <%= link_to "Edit", edit_patient_message_path(patient, message),
+                data: { "turbo-frame": "message_#{message.id}" },
+                class: "text-xs #{message.outgoing? ? 'text-blue-100 hover:text-white' : 'text-gray-500 hover:text-gray-700'}" %>
+          <% end %>
+          <% if policy(message).destroy? %>
+            <%= button_to "Delete", patient_message_path(patient, message),
+                method: :delete,
+                form: { data: { turbo_confirm: 'Are you sure?' }, class: "inline" },
+                class: "text-xs #{message.outgoing? ? 'text-blue-100 hover:text-white' : 'text-gray-500 hover:text-gray-700'}" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

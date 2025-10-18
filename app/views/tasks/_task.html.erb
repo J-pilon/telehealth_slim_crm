@@ -1,4 +1,4 @@
-<div id="task_<%= task.id %>" class="p-4 rounded-lg border border-gray-200 transition-colors hover:bg-gray-50">
+<div id="<%= dom_id(task) %>" class="p-4 rounded-lg border border-gray-200 transition-colors hover:bg-gray-50">
   <div class="flex justify-between items-start">
     <div class="flex-1">
       <div class="flex items-center space-x-3">
@@ -74,17 +74,14 @@
 
     <!-- Actions -->
     <div class="flex items-center ml-4 space-x-2">
-        <%= link_to "View", task_path(task), class: "text-blue-600 hover:text-blue-900 text-sm" %>
+      <%= link_to "View", task_path(task), data: { "turbo-frame": "task_detail" }, class: "text-blue-600 hover:text-blue-900 text-sm" %>
       <% if policy(task).update? %>
-        <%= link_to "Edit", edit_task_path(task), class: "text-indigo-600 hover:text-indigo-900 text-sm" %>
+        <%= link_to "Edit", edit_task_path(task), data: { "turbo-frame": "task_form" }, class: "text-indigo-600 hover:text-indigo-900 text-sm" %>
       <% end %>
       <% if policy(task).destroy? %>
-        <%= link_to "Delete", task_path(task),
+        <%= button_to "Delete", task_path(task),
             method: :delete,
-            data: {
-              method: :delete,
-              confirm: 'Are you sure?'
-            },
+            form: { data: { turbo_confirm: 'Are you sure?' } },
             class: "text-red-600 hover:text-red-900 text-sm" %>
       <% end %>
     </div>

@@ -21,6 +21,9 @@ class TasksController < ApplicationController
     # Pagination
     @tasks = @tasks.page(params[:page]).per(20)
 
+    # Initialize task for inline form
+    @task = Task.new
+
     # Stats for dashboard - use scoped tasks
     scoped_tasks = policy_scope(Task)
     @stats = {
@@ -34,16 +37,31 @@ class TasksController < ApplicationController
 
   def show
     authorize @task
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
   end
 
   def new
     @task = Task.new
     @task.patient_id = params[:patient_id] if params[:patient_id]
     authorize @task
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { render :new }
+    end
   end
 
   def edit
     authorize @task
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { render :edit }
+    end
   end
 
   def create
@@ -53,18 +71,12 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.prepend('tasks-list', partial: 'tasks/task', locals: { task: @task }),
-            turbo_stream.update('task-count', html: Task.pending.count),
-            turbo_stream.replace('task-form', partial: 'tasks/form', locals: { task: Task.new })
-          ]
-        end
+        # Update stats for turbo stream response
+        update_stats
+        format.turbo_stream
         format.html { redirect_to tasks_path, notice: 'Task was successfully created.' }
       else
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace('task-form', partial: 'tasks/form', locals: { task: @task })
-        end
+        format.turbo_stream
         format.html { render :new, status: :unprocessable_content }
       end
     end
@@ -75,17 +87,12 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.update(task_params)
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace("task_#{@task.id}", partial: 'tasks/task', locals: { task: @task }),
-            turbo_stream.update('task-count', html: Task.pending.count)
-          ]
-        end
+        # Update stats for turbo stream response
+        update_stats
+        format.turbo_stream
         format.html { redirect_to tasks_path, notice: 'Task was successfully updated.' }
       else
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("task_#{@task.id}", partial: 'tasks/form', locals: { task: @task })
-        end
+        format.turbo_stream
         format.html { render :edit, status: :unprocessable_content }
       end
     end
@@ -96,12 +103,9 @@ class TasksController < ApplicationController
     @task.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.remove("task_#{@task.id}"),
-          turbo_stream.update('task-count', html: Task.pending.count)
-        ]
-      end
+      # Update stats for turbo stream response
+      update_stats
+      format.turbo_stream
       format.html { redirect_to tasks_path, notice: 'Task was successfully deleted.' }
     end
   end
@@ -113,10 +117,12 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.update(status: 'completed')
         @task.reload
+        update_stats
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("task_#{@task.id}", partial: 'tasks/task', locals: { task: @task }),
-            turbo_stream.update('task-count', html: Task.pending.count),
+            turbo_stream.update('task-count', @stats[:pending_tasks]),
+            turbo_stream.replace('task_detail', partial: 'tasks/show_content', locals: { task: @task }),
             turbo_stream.update('flash-messages', partial: 'shared/flash_messages',
                                                   locals: { notice: 'Task marked as completed.' })
           ]
@@ -138,10 +144,12 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.update(status: 'pending')
         @task.reload
+        update_stats
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("task_#{@task.id}", partial: 'tasks/task', locals: { task: @task }),
-            turbo_stream.update('task-count', html: Task.pending.count),
+            turbo_stream.update('task-count', @stats[:pending_tasks]),
+            turbo_stream.replace('task_detail', partial: 'tasks/show_content', locals: { task: @task }),
             turbo_stream.update('flash-messages', partial: 'shared/flash_messages',
                                                   locals: { notice: 'Task reopened.' })
           ]
@@ -164,5 +172,16 @@ class TasksController < ApplicationController
 
   def task_params
     params.require(:task).permit(:title, :description, :due_date, :status, :patient_id, :user_id)
+  end
+
+  def update_stats
+    scoped_tasks = policy_scope(Task)
+    @stats = {
+      total_tasks: scoped_tasks.count,
+      pending_tasks: scoped_tasks.pending.count,
+      completed_tasks: scoped_tasks.completed.count,
+      overdue_tasks: scoped_tasks.overdue.count,
+      due_today_tasks: scoped_tasks.due_today.count
+    }
   end
 end

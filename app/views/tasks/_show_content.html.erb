@@ -1,0 +1,101 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900"><%= task.title %></h1>
+      <p class="text-gray-600">Task Details</p>
+    </div>
+    <div class="flex space-x-3">
+      <% if policy(task).update? %>
+        <%= link_to "Edit Task", edit_task_path(task), data: { "turbo-frame": "task_detail" }, class: "btn-secondary" %>
+      <% end %>
+      <%= link_to "Close", tasks_path, data: { "turbo-frame": "_top" }, class: "btn-secondary" %>
+    </div>
+  </div>
+
+  <!-- Task Details -->
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-4 py-5 sm:p-6">
+      <div class="space-y-4">
+        <div>
+          <label class="form-label">Title</label>
+          <p class="mt-1 text-sm text-gray-900"><%= task.title %></p>
+        </div>
+
+        <% if task.description.present? %>
+          <div>
+            <label class="form-label">Description</label>
+            <p class="mt-1 text-sm text-gray-900"><%= task.description %></p>
+          </div>
+        <% end %>
+
+        <div>
+          <label class="form-label">Status</label>
+          <p class="mt-1">
+            <span class="status-badge status-<%= task.status %>">
+              <%= task.status.capitalize %>
+            </span>
+            <% if task.overdue? %>
+              <span class="ml-2 text-red-800 bg-red-100 status-badge">
+                Overdue
+              </span>
+            <% elsif task.due_today? %>
+              <span class="ml-2 text-yellow-800 bg-yellow-100 status-badge">
+                Due Today
+              </span>
+            <% end %>
+          </p>
+        </div>
+
+        <div>
+          <label class="form-label">Patient</label>
+          <p class="mt-1 text-sm text-gray-900">
+            <%= link_to task.patient.full_name, patient_path(task.patient),
+                data: { "turbo-frame": "_top" },
+                class: "text-blue-600 hover:text-blue-900" %>
+          </p>
+        </div>
+
+        <div>
+          <label class="form-label">Due Date</label>
+          <p class="mt-1 text-sm text-gray-900"><%= task.due_date.strftime('%B %d, %Y') %></p>
+        </div>
+
+        <% if task.completed? && task.completed_at.present? %>
+          <div>
+            <label class="form-label">Completed At</label>
+            <p class="mt-1 text-sm text-gray-900"><%= task.completed_at.strftime('%B %d, %Y at %I:%M %p') %></p>
+          </div>
+        <% end %>
+
+        <div>
+          <label class="form-label">Created At</label>
+          <p class="mt-1 text-sm text-gray-900"><%= task.created_at.strftime('%B %d, %Y at %I:%M %p') %></p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-wrap gap-3 mt-6">
+        <% if policy(task).update? %>
+          <% if task.pending? %>
+            <%= button_to "Mark Complete", complete_task_path(task),
+                method: :patch,
+                form: { data: { turbo_confirm: 'Mark this task as completed?' } },
+                class: "btn-success" %>
+          <% else %>
+            <%= button_to "Reopen Task", reopen_task_path(task),
+                method: :patch,
+                form: { data: { turbo_confirm: 'Reopen this task?' } },
+                class: "btn-secondary" %>
+          <% end %>
+        <% end %>
+        <% if policy(task).destroy? %>
+          <%= button_to "Delete Task", task_path(task),
+              method: :delete,
+              form: { data: { turbo_confirm: 'Are you sure?' } },
+              class: "btn-danger" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
