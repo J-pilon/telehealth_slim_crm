@@ -3,7 +3,7 @@
     <div class="space-y-2">
       <div>
         <p class="text-sm font-semibold <%= message.outgoing? ? 'text-blue-100' : 'text-gray-600' %>">Message Details</p>
-        <p class="text-sm mt-1"><%= message.content %></p>
+        <p class="mt-1 text-sm"><%= message.content %></p>
       </div>
 
       <div class="pt-2 border-t <%= message.outgoing? ? 'border-blue-400' : 'border-gray-300' %>">
@@ -44,4 +44,3 @@
     </div>
   </div>
 </div>
-

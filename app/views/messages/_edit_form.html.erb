@@ -1,8 +1,8 @@
 <div class="flex <%= message.outgoing? ? 'justify-end' : 'justify-start' %>">
-  <div class="max-w-lg px-4 py-3 rounded-lg bg-white border-2 border-blue-500">
+  <div class="px-4 py-3 max-w-lg bg-white rounded-lg border-2 border-blue-500">
     <%= form_with(model: [patient, message], class: "space-y-3") do |form| %>
       <% if message.errors.any? %>
-        <div id="error_explanation" class="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded text-xs">
+        <div id="error_explanation" class="px-3 py-2 text-xs text-red-700 bg-red-50 rounded border border-red-200">
           <h2 class="font-bold"><%= pluralize(message.errors.count, "error") %>:</h2>
           <ul class="mt-1 list-disc list-inside">
             <% message.errors.full_messages.each do |msg| %>
@@ -36,4 +36,3 @@
     <% end %>
   </div>
 </div>
-
