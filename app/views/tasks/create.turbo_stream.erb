@@ -1,0 +1,15 @@
+<%= turbo_stream.prepend "tasks" do %>
+  <%= render "task", task: @task %>
+<% end %>
+
+<%= turbo_stream.replace "task_form" do %>
+  <turbo-frame id="task_form">
+    <%= link_to "New Task", new_task_path, data: { "turbo-frame": "task_form" }, class: "btn-primary" %>
+  </turbo-frame>
+<% end %>
+
+<%= turbo_stream.update "task-count", @stats[:pending_tasks] %>
+
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "shared/flash_messages", notice: "Task was successfully created." %>
+<% end %>
