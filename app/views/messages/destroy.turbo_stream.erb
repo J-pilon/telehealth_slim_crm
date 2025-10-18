@@ -1,0 +1,8 @@
+<%= turbo_stream.remove "message_#{@message.id}" %>
+
+<%= turbo_stream.update "message-count", @patient.messages.count %>
+
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "shared/flash_messages", notice: "Message was successfully deleted." %>
+<% end %>
+

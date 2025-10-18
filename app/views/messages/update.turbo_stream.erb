@@ -1,0 +1,14 @@
+<% if @message.errors.empty? %>
+  <%= turbo_stream.replace "message_#{@message.id}" do %>
+    <%= render "message", message: @message, patient: @patient %>
+  <% end %>
+
+  <%= turbo_stream.update "flash-messages" do %>
+    <%= render "shared/flash_messages", notice: "Message was successfully updated." %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace "message_#{@message.id}" do %>
+    <%= render "edit_form", message: @message, patient: @patient %>
+  <% end %>
+<% end %>
+

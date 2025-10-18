@@ -1,4 +1,9 @@
 <div class="space-y-6">
+  <!-- Flash Messages -->
+  <div id="flash-messages">
+    <%= render 'shared/flash_messages' %>
+  </div>
+
   <!-- Header -->
   <div class="flex justify-between items-center">
     <div>
@@ -6,9 +11,9 @@
       <p class="text-gray-600">Medical Record #<%= @patient.medical_record_number %></p>
     </div>
     <div class="flex space-x-3">
-      <%= link_to "Back to Patient", @patient, class: "btn-secondary" %>
+      <%= link_to "Back to Patient", @patient, data: { "turbo-frame": "_top" }, class: "btn-secondary" %>
       <% if policy(Patient).index? %>
-        <%= link_to "All Patients", patients_path, class: "btn-secondary" %>
+        <%= link_to "All Patients", patients_path, data: { "turbo-frame": "_top" }, class: "btn-secondary" %>
       <% end %>
     </div>
   </div>
@@ -27,7 +32,7 @@
       <div id="messages-list" class="overflow-y-auto mb-6 space-y-4 max-h-96">
         <% if @messages.any? %>
           <% @messages.each do |message| %>
-            <%= render 'message', message: message %>
+            <%= render 'message', message: message, patient: @patient %>
           <% end %>
         <% else %>
           <div class="py-8 text-center text-gray-500">

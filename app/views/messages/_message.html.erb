@@ -1,4 +1,4 @@
-<div id="message_<%= message.id %>" class="flex <%= message.outgoing? ? 'justify-end' : 'justify-start' %>">
+<turbo-frame id="message_<%= message.id %>" class="flex <%= message.outgoing? ? 'justify-end' : 'justify-start' %>">
   <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg <%= message.outgoing? ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-900' %>">
     <div class="flex items-start space-x-2">
       <div class="flex-1">
@@ -8,17 +8,18 @@
             <%= message.formatted_created_at %>
           </p>
           <div class="flex space-x-1">
+            <%= link_to "View", patient_message_path(patient, message),
+                data: { "turbo-frame": "message_#{message.id}" },
+                class: "text-xs #{message.outgoing? ? 'text-blue-100 hover:text-white' : 'text-gray-500 hover:text-gray-700'}" %>
             <% if policy(message).update? %>
-              <%= link_to "Edit", edit_patient_message_path(@patient, message),
+              <%= link_to "Edit", edit_patient_message_path(patient, message),
+                  data: { "turbo-frame": "message_#{message.id}" },
                   class: "text-xs #{message.outgoing? ? 'text-blue-100 hover:text-white' : 'text-gray-500 hover:text-gray-700'}" %>
             <% end %>
             <% if policy(message).destroy? %>
-              <%= link_to "Delete", patient_message_path(@patient, message),
+              <%= button_to "Delete", patient_message_path(patient, message),
                   method: :delete,
-                  data: {
-                    method: :delete,
-                    confirm: 'Are you sure?'
-                  },
+                  form: { data: { turbo_confirm: 'Are you sure?' }, class: "inline" },
                   class: "text-xs #{message.outgoing? ? 'text-blue-100 hover:text-white' : 'text-gray-500 hover:text-gray-700'}" %>
             <% end %>
           </div>
@@ -26,4 +27,4 @@
       </div>
     </div>
   </div>
-</div>
+</turbo-frame>

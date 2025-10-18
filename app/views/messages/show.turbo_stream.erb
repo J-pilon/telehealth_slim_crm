@@ -1,3 +1,4 @@
-<turbo-frame id="message_<%= @message.id %>">
+<%= turbo_stream.replace "message_#{@message.id}" do %>
   <%= render "show_content", message: @message, patient: @patient %>
-</turbo-frame>
+<% end %>
+
