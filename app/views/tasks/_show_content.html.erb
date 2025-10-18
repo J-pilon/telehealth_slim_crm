@@ -7,7 +7,7 @@
     </div>
     <div class="flex space-x-3">
       <% if policy(task).update? %>
-        <%= link_to "Edit Task", edit_task_path(task), data: { "turbo-frame": "task_form" }, class: "btn-secondary" %>
+        <%= link_to "Edit Task", edit_task_path(task), data: { "turbo-frame": "task_detail" }, class: "btn-secondary" %>
       <% end %>
       <%= link_to "Close", tasks_path, data: { "turbo-frame": "_top" }, class: "btn-secondary" %>
     </div>
