@@ -1,6 +1,7 @@
-<%= form_with(model: task, local: false, class: "space-y-4") do |form| %>
+<turbo-frame id="task_form">
+  <%= form_with(model: task, class: "space-y-4") do |form| %>
   <% if task.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+    <div id="error_explanation" class="relative px-4 py-3 text-red-700 bg-red-50 rounded border border-red-200">
       <h2 class="font-bold"><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
       <ul class="mt-2 list-disc list-inside">
         <% task.errors.full_messages.each do |message| %>
@@ -10,7 +11,7 @@
     </div>
   <% end %>
 
-  <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-2">
+  <div class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
     <div class="sm:col-span-2">
       <%= form.label :title, class: "form-label" %>
       <%= form.text_field :title, class: "form-input" %>
@@ -47,8 +48,9 @@
     <% end %>
   </div>
 
-  <div class="flex justify-end space-x-3">
-    <%= link_to "Cancel", tasks_path, class: "btn-secondary" %>
+  <div class="flex justify-end space-x-2">
+    <%= link_to "Cancel", tasks_path, data: { "turbo-frame": "_top" }, class: "btn-secondary" %>
     <%= form.submit (task.persisted? ? "Update Task" : "Create Task"), class: "btn-primary" %>
   </div>
-<% end %>
+  <% end %>
+</turbo-frame>
