@@ -5,14 +5,16 @@
       <%= render "message", message: @message, patient: @patient %>
     <% end %>
 
-    <%= turbo_stream.update "message-count", @patient.messages.count %>
+    <%= turbo_stream.update "message-count" do %>
+      <%= pluralize(@patient.messages.count, 'message') %>
+    <% end %>
   <% end %>
 
   <%= turbo_stream.replace frame_id do %>
     <turbo-frame id="<%= frame_id %>">
       <% if frame_id == "quick_message_form" %>
-        <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-          <p class="text-sm text-green-700 font-medium">Message sent successfully!</p>
+        <div class="p-4 text-center bg-green-50 rounded-lg border border-green-200">
+          <p class="text-sm font-medium text-green-700">Message sent successfully!</p>
           <%= link_to "Send Another", new_patient_message_path(@patient, frame_id: frame_id), data: { "turbo-frame": frame_id }, class: "mt-2 btn-primary w-full text-center" %>
         </div>
       <% else %>
