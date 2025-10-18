@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   resources :patients do
-    resources :messages, only: [:index, :show, :create, :edit, :update, :destroy]
+    resources :messages, only: [:index, :show, :new, :create, :edit, :update, :destroy]
     resources :tasks, only: [:index, :create, :update]
     collection do
       get :search
