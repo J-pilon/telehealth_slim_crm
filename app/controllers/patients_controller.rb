@@ -35,8 +35,25 @@ class PatientsController < ApplicationController
     authorize @patient
 
     if @patient.save
-      # Send welcome email in background
-      WelcomeEmailJob.perform_later(@patient.id)
+      # Create associated user account
+      user = User.new(
+        email: @patient.email,
+        password: SecureRandom.hex(32),
+        role: 'patient'
+      )
+      user.skip_patient_creation = true
+      user.save!
+      @patient.update!(user: user)
+
+      # Generate password reset token
+      raw_token, encrypted_token = Devise.token_generator.generate(User, :reset_password_token)
+      user.update!(
+        reset_password_token: encrypted_token,
+        reset_password_sent_at: Time.current
+      )
+
+      # Send welcome email with token in background
+      WelcomeEmailJob.perform_later(@patient.id, raw_token)
       redirect_to @patient, notice: 'Patient was successfully created.'
     else
       render :new, status: :unprocessable_content

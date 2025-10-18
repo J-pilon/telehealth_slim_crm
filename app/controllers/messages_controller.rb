@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
 
   def index
     authorize Message
-    @messages = policy_scope(@patient.messages.recent)
+    @messages = @patient.messages.order(created_at: :desc)
     @message = @patient.messages.build
   end
 
