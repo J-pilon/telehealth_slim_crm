@@ -4,9 +4,9 @@
 class PatientMailer < ApplicationMailer
   default from: 'noreply@telehealth-crm.com'
 
-  def welcome_email(patient)
+  def welcome_email(patient, reset_token)
     @patient = patient
-    @url = root_url
+    @url = edit_user_password_url(reset_password_token: reset_token)
 
     mail(
       to: @patient.email,
