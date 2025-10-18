@@ -17,11 +17,14 @@ class User < ApplicationRecord
 
   # Callbacks
   after_initialize :set_default_role, if: :new_record?
-  after_create :create_patient_if_needed
+  after_create :create_patient_if_needed, unless: :skip_patient_creation
 
   # Scopes
   scope :admins, -> { where(role: 'admin') }
   scope :patients, -> { where(role: 'patient') }
+
+  # Attribute accessor to skip patient creation (used when creating user from patient)
+  attr_accessor :skip_patient_creation
 
   private
 
