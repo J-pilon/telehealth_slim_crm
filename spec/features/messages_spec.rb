@@ -81,7 +81,7 @@ RSpec.describe 'Messages Management', type: :system do
     end
 
     it 'shows delete button for messages' do
-      message = create(:message, :outgoing, patient: @patient, user: @admin, content: 'Message to delete')
+      create(:message, :outgoing, patient: @patient, user: @admin, content: 'Message to delete')
 
       visit patient_messages_path(@patient)
 

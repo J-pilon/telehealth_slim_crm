@@ -51,11 +51,10 @@ class MessagesController < ApplicationController
     authorize @message
 
     respond_to do |format|
+      format.turbo_stream
       if @message.save
-        format.turbo_stream
         format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully sent.' }
       else
-        format.turbo_stream
         format.html do
           @messages = policy_scope(@patient.messages.recent)
           render :index, status: :unprocessable_content
@@ -68,11 +67,10 @@ class MessagesController < ApplicationController
     authorize @message
 
     respond_to do |format|
+      format.turbo_stream
       if @message.update(message_params)
-        format.turbo_stream
         format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully updated.' }
       else
-        format.turbo_stream
         format.html { render :edit, status: :unprocessable_content }
       end
     end
