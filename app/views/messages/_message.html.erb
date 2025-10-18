@@ -3,7 +3,7 @@
     <div class="flex items-start space-x-2">
       <div class="flex-1">
         <p class="text-sm"><%= message.content %></p>
-        <div class="flex items-center justify-between mt-1">
+        <div class="flex justify-between items-center mt-1">
           <p class="text-xs <%= message.outgoing? ? 'text-blue-100' : 'text-gray-500' %>">
             <%= message.formatted_created_at %>
           </p>

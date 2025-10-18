@@ -25,6 +25,8 @@ class Message < ApplicationRecord
   end
 
   def formatted_created_at
+    return unless persisted?
+
     created_at.strftime('%B %d, %Y at %I:%M %p')
   end
 
