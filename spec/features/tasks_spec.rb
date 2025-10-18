@@ -62,10 +62,14 @@ RSpec.describe 'Task Management', type: :system do
 
       click_link 'Sort by Due Date'
 
-      # Check that tasks are ordered by due date
-      rows = page.all('#tasks-list .border')
-      expect(rows.first).to have_content('Task 2')
-      expect(rows.last).to have_content('Task 1')
+      # Wait for page to reload and check that tasks are ordered by due date
+      expect(page).to have_content('Task 1')
+      expect(page).to have_content('Task 2')
+
+      # Re-query elements after page load to avoid stale element reference
+      task_titles = page.all('#tasks .text-lg').map(&:text)
+      expect(task_titles.first).to eq('Task 2')
+      expect(task_titles.last).to eq('Task 1')
     end
 
     it 'creates a new task' do
@@ -178,7 +182,7 @@ RSpec.describe 'Task Management', type: :system do
       visit tasks_path
 
       expect(page).to have_content('No tasks found')
-      expect(page).to have_content('Create New Task')
+      expect(page).to have_link('New Task')
     end
 
     it 'displays overdue tasks with warning' do
