@@ -13,10 +13,36 @@ class MessagesController < ApplicationController
 
   def show
     authorize @message
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
+  end
+
+  def new
+    @message = @patient.messages.build
+    authorize @message
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html do
+        if turbo_frame_request?
+          render :new, layout: false
+        else
+          redirect_to patient_messages_path(@patient)
+        end
+      end
+    end
   end
 
   def edit
     authorize @message
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html
+    end
   end
 
   def create
@@ -26,20 +52,10 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.prepend('messages-list', partial: 'messages/message', locals: { message: @message }),
-            turbo_stream.replace('message-form', partial: 'messages/form',
-                                                 locals: { message: @patient.messages.build, patient: @patient }),
-            turbo_stream.update('message-count', html: @patient.messages.count)
-          ]
-        end
+        format.turbo_stream
         format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully sent.' }
       else
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace('message-form', partial: 'messages/form',
-                                                                    locals: { message: @message, patient: @patient })
-        end
+        format.turbo_stream
         format.html do
           @messages = policy_scope(@patient.messages.recent)
           render :index, status: :unprocessable_content
@@ -53,17 +69,10 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.update(message_params)
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("message_#{@message.id}", partial: 'messages/message',
-                                                                              locals: { message: @message })
-        end
+        format.turbo_stream
         format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully updated.' }
       else
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("message_#{@message.id}",
-                                                    partial: 'messages/form',
-                                                    locals: { message: @message, patient: @patient })
-        end
+        format.turbo_stream
         format.html { render :edit, status: :unprocessable_content }
       end
     end
@@ -74,12 +83,7 @@ class MessagesController < ApplicationController
     @message.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.remove("message_#{@message.id}"),
-          turbo_stream.update('message-count', html: @patient.messages.count)
-        ]
-      end
+      format.turbo_stream
       format.html { redirect_to patient_messages_path(@patient), notice: 'Message was successfully deleted.' }
     end
   end
