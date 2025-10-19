@@ -48,6 +48,7 @@ class MessagesController < ApplicationController
   def create
     @message = @patient.messages.build(message_params)
     @message.user = current_user
+    @message.message_type ||= current_user.admin? ? 'outgoing' : 'incoming'
     authorize @message
 
     respond_to do |format|
