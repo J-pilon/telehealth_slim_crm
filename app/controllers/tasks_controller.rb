@@ -19,7 +19,7 @@ class TasksController < ApplicationController
     @tasks = @tasks.recent if params[:sort] == 'recent'
 
     # Pagination
-    @tasks = @tasks.page(params[:page]).per(20)
+    @tasks = @tasks.order(updated_at: :desc).page(params[:page]).per(20)
 
     # Initialize task for inline form
     @task = Task.new
@@ -46,12 +46,28 @@ class TasksController < ApplicationController
 
   def new
     @task = Task.new
-    @task.patient_id = params[:patient_id] if params[:patient_id]
+    @patient = Patient.find(params[:patient_id]) if params[:patient_id]
+    @task.patient = @patient if @patient
     authorize @task
 
     respond_to do |format|
-      format.turbo_stream
-      format.html { render :new }
+      format.html do
+        if turbo_frame_request?
+          # Turbo frame will request HTML, render the form partial
+          render partial: "tasks/form", locals: { task: @task, patient: @patient }
+        elsif @patient
+          redirect_to patient_tasks_path(@patient)
+        else
+          render :new
+        end
+      end
+      format.turbo_stream do
+        if @patient
+          render turbo_stream: turbo_stream.replace("patient_task_form", partial: "tasks/form", locals: { task: @task, patient: @patient })
+        else
+          render turbo_stream: turbo_stream.replace("task_form", partial: "tasks/form", locals: { task: @task, patient: nil })
+        end
+      end
     end
   end
 
@@ -67,16 +83,35 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     @task.user = current_user
+    @patient = Patient.find(params[:patient_id]) if params[:patient_id]
     authorize @task
 
     respond_to do |format|
       if @task.save
         # Update stats for turbo stream response
         update_stats
-        format.turbo_stream
-        format.html { redirect_to tasks_path, notice: 'Task was successfully created.' }
+        format.turbo_stream do
+          if @patient
+            render :create_from_patient
+          else
+            render :create
+          end
+        end
+        format.html do
+          if @patient
+            redirect_to patient_path(@patient), notice: 'Task was successfully created.'
+          else
+            redirect_to tasks_path, notice: 'Task was successfully created.'
+          end
+        end
       else
-        format.turbo_stream
+        format.turbo_stream do
+          if @patient
+            render turbo_stream: turbo_stream.replace("patient_task_form", partial: "tasks/form", locals: { task: @task, patient: @patient })
+          else
+            render :create
+          end
+        end
         format.html { render :new, status: :unprocessable_content }
       end
     end
