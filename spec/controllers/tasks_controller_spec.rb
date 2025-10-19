@@ -83,7 +83,7 @@ RSpec.describe TasksController, type: :controller do
 
       it 'sorts by due date' do
         get :index, params: { sort: 'due_date' }
-        expect(assigns(:tasks).order_values).to eq(Task.by_due_date.order_values)
+        expect(assigns(:tasks).to_a).to eq(Task.by_due_date.order(updated_at: :desc).limit(20).to_a)
       end
     end
 

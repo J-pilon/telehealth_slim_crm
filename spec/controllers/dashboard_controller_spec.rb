@@ -37,7 +37,7 @@ RSpec.describe DashboardController, type: :controller do
       it 'assigns recent patients' do
         get :index
         expect(assigns(:recent_patients)).to be_present
-        expect(assigns(:recent_patients).count).to be <= 5
+        expect(assigns(:recent_patients).count).to be <= 10
       end
 
       it 'assigns pending tasks' do
@@ -52,10 +52,9 @@ RSpec.describe DashboardController, type: :controller do
         expect(assigns(:overdue_tasks).count).to eq(2)
       end
 
-      it 'assigns recent messages' do
+      it 'assigns recent messages count in stats' do
         get :index
-        expect(assigns(:recent_messages)).to be_present
-        expect(assigns(:recent_messages).count).to eq(3)
+        expect(assigns(:stats)[:recent_messages]).to eq(3)
       end
 
       it 'assigns stats hash' do

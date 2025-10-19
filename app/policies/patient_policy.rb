@@ -22,6 +22,10 @@ class PatientPolicy < ApplicationPolicy
     admin?
   end
 
+  def search?
+    admin?
+  end
+
   class Scope < Scope
     def resolve
       if user.admin?

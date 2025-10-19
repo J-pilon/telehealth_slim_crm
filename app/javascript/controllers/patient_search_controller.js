@@ -90,7 +90,7 @@ export default class extends Controller {
           <div class="flex-shrink-0 w-10 h-10">
             <div class="flex justify-center items-center w-10 h-10 bg-gray-300 rounded-full">
               <span class="text-sm font-medium text-gray-700">
-                ${patient.first_name.charAt(0)}${patient.last_name.charAt(0)}
+                ${patient.full_name}
               </span>
             </div>
           </div>
