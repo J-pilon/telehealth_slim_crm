@@ -8,7 +8,7 @@
   <!-- Search and Filters -->
   <div class="p-4 bg-white rounded-lg shadow">
     <!-- Search -->
-    <div class="mb-4" data-controller="patient-search" data-patient-search-url-value="<%= search_patients_path %>">
+    <div class="mb-4 max-w-full" data-controller="patient-search" data-patient-search-url-value="<%= search_patients_path %>">
       <div class="relative">
         <input type="text"
                placeholder="Search patients by name, email, or medical record number..."
@@ -32,7 +32,7 @@
       </div>
 
       <!-- Search Results -->
-      <div class="hidden overflow-auto absolute z-10 mt-1 w-full max-h-60 bg-white rounded-md border border-gray-300 shadow-lg"
+      <div class="hidden overflow-auto absolute z-10 mt-1 w-full max-w-5xl max-h-60 bg-white rounded-md border border-gray-300 shadow-lg"
            data-patient-search-target="results">
       </div>
     </div>
