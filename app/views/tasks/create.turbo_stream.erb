@@ -1,14 +1,79 @@
-<%= turbo_stream.prepend "tasks" do %>
-  <%= render "task", task: @task %>
-<% end %>
+<% if @patient %>
+  <%# Patient context: Clear the form and update the tasks section %>
+  <%= turbo_stream.replace frame_id do %>
+    <turbo-frame id="<%= frame_id %>">
+      <%= link_to "New Task", new_patient_task_path(@patient), data: { turbo_frame: frame_id }, class: "btn-primary w-full text-center" %>
+    </turbo-frame>
+  <% end %>
 
-<%= turbo_stream.replace "task_form" do %>
-  <turbo-frame id="task_form">
-    <%= link_to "New Task", new_task_path, data: { "turbo-frame": "task_form" }, class: "btn-primary" %>
-  </turbo-frame>
-<% end %>
+  <%= turbo_stream.replace "patient_tasks_section" do %>
+    <% pending_tasks = @patient.tasks.pending.limit(10) %>
+    <% completed_tasks = @patient.tasks.completed.limit(5) %>
 
-<%= turbo_stream.update "task-count", @stats[:pending_tasks] %>
+    <div id="patient_tasks_section" class="flex flex-col justify-between h-full">
+      <% if pending_tasks.any? %>
+        <div class="mb-4">
+          <h4 class="mb-2 text-sm font-medium text-gray-700">Pending Tasks</h4>
+          <div class="space-y-2">
+            <% pending_tasks.each do |task| %>
+              <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-900"><%= task.title %></p>
+                    <p class="text-xs text-gray-500">Due: <%= task.due_date.strftime('%b %d, %Y') %></p>
+                  </div>
+                  <span class="status-badge status-pending">Pending</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if completed_tasks.any? %>
+        <div>
+          <h4 class="mb-2 text-sm font-medium text-gray-700">Recently Completed</h4>
+          <div class="space-y-2">
+            <% completed_tasks.each do |task| %>
+              <div class="p-3 bg-green-50 rounded-lg border border-green-200">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-900"><%= task.title %></p>
+                    <p class="text-xs text-gray-500">Completed: <%= task.completed_at.strftime('%b %d, %Y') %></p>
+                  </div>
+                  <span class="status-badge status-completed">Completed</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if pending_tasks.empty? && completed_tasks.empty? %>
+        <p class="text-gray-500">No tasks yet</p>
+      <% end %>
+
+      <div class="pt-4 mt-4 border-t border-gray-200">
+        <turbo-frame id="<%= frame_id %>">
+          <%= link_to "New Task", new_patient_task_path(@patient), data: { turbo_frame: frame_id }, class: "btn-primary w-full text-center" %>
+        </turbo-frame>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <%# Tasks index context: Prepend task to list and reset form %>
+  <%= turbo_stream.prepend "tasks" do %>
+    <%= render "task", task: @task %>
+  <% end %>
+
+  <%= turbo_stream.replace frame_id do %>
+    <turbo-frame id="<%= frame_id %>">
+      <%= link_to "New Task", new_task_path, data: { "turbo-frame": frame_id }, class: "btn-primary" %>
+    </turbo-frame>
+  <% end %>
+
+  <%= turbo_stream.update "task-count", @stats[:pending_tasks] %>
+<% end %>
 
 <%= turbo_stream.update "flash-messages" do %>
   <%= render "shared/flash_messages", notice: "Task was successfully created." %>

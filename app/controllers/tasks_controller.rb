@@ -54,7 +54,7 @@ class TasksController < ApplicationController
       format.html do
         if turbo_frame_request?
           # Turbo frame will request HTML, render the form partial
-          render partial: "tasks/form", locals: { task: @task, patient: @patient }
+          render partial: 'tasks/form', locals: { task: @task, patient: @patient }
         elsif @patient
           redirect_to patient_tasks_path(@patient)
         else
@@ -63,9 +63,11 @@ class TasksController < ApplicationController
       end
       format.turbo_stream do
         if @patient
-          render turbo_stream: turbo_stream.replace("patient_task_form", partial: "tasks/form", locals: { task: @task, patient: @patient })
+          render turbo_stream: turbo_stream.replace('patient_task_form', partial: 'tasks/form',
+                                                                         locals: { task: @task, patient: @patient })
         else
-          render turbo_stream: turbo_stream.replace("task_form", partial: "tasks/form", locals: { task: @task, patient: nil })
+          render turbo_stream: turbo_stream.replace('task_form', partial: 'tasks/form',
+                                                                 locals: { task: @task, patient: nil })
         end
       end
     end
@@ -86,31 +88,19 @@ class TasksController < ApplicationController
     @patient = Patient.find(params[:patient_id]) if params[:patient_id]
     authorize @task
 
-    respond_to do |format|
-      if @task.save
-        # Update stats for turbo stream response
-        update_stats
-        format.turbo_stream do
-          if @patient
-            render :create_from_patient
-          else
-            render :create
-          end
-        end
+    if @task.save
+      update_stats
+      respond_to do |format|
+        format.turbo_stream
         format.html do
-          if @patient
-            redirect_to patient_path(@patient), notice: 'Task was successfully created.'
-          else
-            redirect_to tasks_path, notice: 'Task was successfully created.'
-          end
+          redirect_to @patient ? patient_path(@patient) : tasks_path, notice: 'Task was successfully created.'
         end
-      else
+      end
+    else
+      respond_to do |format|
         format.turbo_stream do
-          if @patient
-            render turbo_stream: turbo_stream.replace("patient_task_form", partial: "tasks/form", locals: { task: @task, patient: @patient })
-          else
-            render :create
-          end
+          render turbo_stream: turbo_stream.replace(frame_id, partial: 'tasks/form',
+                                                              locals: { task: @task, patient: @patient })
         end
         format.html { render :new, status: :unprocessable_content }
       end
@@ -219,4 +209,9 @@ class TasksController < ApplicationController
       due_today_tasks: scoped_tasks.due_today.count
     }
   end
+
+  def frame_id
+    @patient ? 'patient_task_form' : 'task_form'
+  end
+  helper_method :frame_id
 end
