@@ -45,12 +45,12 @@ RSpec.describe PatientsController, type: :controller do
 
       it 'sorts by name' do
         get :index, params: { sort: 'name' }
-        expect(assigns(:patients).order_values).to eq(Patient.by_name.order_values)
+        expect(assigns(:patients).to_a).to eq(Patient.by_name.order(created_at: :desc).limit(20).to_a)
       end
 
       it 'sorts by recent' do
         get :index, params: { sort: 'recent' }
-        expect(assigns(:patients).order_values).to eq(Patient.recent.order_values)
+        expect(assigns(:patients).to_a).to eq(Patient.recent.order(created_at: :desc).limit(20).to_a)
       end
     end
 
