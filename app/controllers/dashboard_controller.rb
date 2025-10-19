@@ -6,10 +6,9 @@ class DashboardController < ApplicationController
 
   def index
     if current_user.admin?
-      @recent_patients = Patient.recent.limit(5)
-      @pending_tasks = Task.pending.limit(10)
-      @overdue_tasks = Task.overdue.limit(5)
-      @recent_messages = Message.recent.limit(10)
+      @recent_patients = Patient.order(created_at: :desc).limit(10)
+      @pending_tasks = Task.pending.order(due_date: :asc).limit(10)
+      @overdue_tasks = Task.overdue.order(due_date: :asc).limit(5)
       @stats = {
         total_patients: Patient.count,
         active_patients: Patient.active.count,

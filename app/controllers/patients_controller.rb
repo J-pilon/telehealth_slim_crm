@@ -11,7 +11,7 @@ class PatientsController < ApplicationController
     @patients = @patients.inactive if params[:status] == 'inactive'
     @patients = @patients.by_name if params[:sort] == 'name'
     @patients = @patients.recent if params[:sort] == 'recent'
-    @patients = @patients.page(params[:page]).per(20)
+    @patients = @patients.order(created_at: :desc).page(params[:page]).per(20)
   end
 
   def show
