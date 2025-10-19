@@ -38,7 +38,6 @@ RSpec.describe 'Messages Management', type: :system do
       visit patient_messages_path(@patient)
 
       fill_in 'message[content]', with: 'How are you feeling today?'
-      select 'Outgoing', from: 'message[message_type]'
       click_button 'Send Message'
 
       expect(page).to have_content('Message was successfully sent.')
@@ -50,7 +49,6 @@ RSpec.describe 'Messages Management', type: :system do
       visit patient_messages_path(@patient)
 
       fill_in 'message[content]', with: 'I am feeling better, thank you!'
-      select 'Incoming', from: 'message[message_type]'
       click_button 'Send Message'
 
       expect(page).to have_content('Message was successfully sent.')
@@ -126,7 +124,6 @@ RSpec.describe 'Messages Management', type: :system do
       visit patient_messages_path(@patient)
 
       fill_in 'message[content]', with: 'Test message from patient'
-      select 'Outgoing', from: 'message[message_type]'
       click_button 'Send Message'
 
       expect(page).to have_content('Message was successfully sent.')
@@ -167,16 +164,6 @@ RSpec.describe 'Messages Management', type: :system do
       click_button 'Send Message'
 
       expect(page).to have_content("Content can't be blank")
-    end
-
-    it 'shows validation errors for missing message type' do
-      visit patient_messages_path(@patient)
-
-      fill_in 'message[content]', with: 'Test message'
-      # Don't select message type
-      click_button 'Send Message'
-
-      expect(page).to have_content("Message type can't be blank")
     end
   end
 end
