@@ -7,6 +7,11 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
+  # Public patient registration
+  get '/apply', to: 'public_registrations#new', as: :patient_application
+  post '/apply', to: 'public_registrations#create'
+  get '/apply/success', to: 'public_registrations#success', as: :success_patient_application
+
   resources :patients do
     resources :messages, only: [:index, :show, :new, :create, :edit, :update, :destroy]
     resources :tasks, only: [:index, :create, :update]
