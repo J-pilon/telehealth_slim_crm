@@ -5,6 +5,7 @@ A minimal CRM skeleton built with Rails 7, designed for healthcare providers to 
 ## Features
 
 - **User Authentication** - Devise-based login with admin/patient roles
+- **Public Patient Registration** - Self-service patient onboarding with health questionnaire
 - **Patient Management** - Complete CRUD operations with search and filtering
 - **Message Threads** - Real-time messaging between staff and patients
 - **Task Management** - Shared task queue with completion tracking
@@ -258,6 +259,11 @@ config/
 - `GET /users/sign_in` - Login page
 - `POST /users/sign_in` - Login
 - `DELETE /users/sign_out` - Logout
+
+### Public Registration
+- `GET /apply` - Public patient registration form
+- `POST /apply` - Submit patient registration
+- `GET /apply/success` - Registration confirmation page
 
 ### Patients
 - `GET /patients` - List all patients

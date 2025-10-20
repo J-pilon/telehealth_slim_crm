@@ -109,6 +109,9 @@ erDiagram
         date date_of_birth
         string medical_record_number
         string status
+        text health_question_one
+        text health_question_two
+        text health_question_three
         datetime created_at
         datetime updated_at
     }
@@ -276,6 +279,12 @@ export default class extends Controller {
 ### RESTful Routes
 
 ```
+# Public Routes (no authentication required)
+GET    /apply                 # Public patient registration form
+POST   /apply                 # Submit patient registration
+GET    /apply/success         # Registration confirmation page
+
+# Authenticated Routes
 GET    /patients              # List patients
 GET    /patients/:id          # Show patient
 POST   /patients              # Create patient
@@ -498,14 +507,17 @@ GitHub Repository
 
 ### User Registration Flow
 
-**Patient Self-Registration**
-- Public registration is enabled exclusively for patient users
-- Default role assignment happens at model initialization
-- Associated Patient record is created automatically post-registration
+**Public Patient Registration** (`/apply`)
+- Self-service registration form accessible without authentication
+- Collects patient information and three health questions
+- Sends welcome email with password reset link via background job
+- Automatically creates admin task: "New Applicant - [Patient Name]" for verification
+- Redirects to success page with email confirmation instructions
 - Benefits:
   - Reduces administrative overhead for patient onboarding
-  - Patients can immediately access the portal
+  - Patients can immediately begin the registration process
   - Self-service reduces support costs
+  - Health questionnaire data collected upfront
 
 **Admin Invitation Model**
 - Admins cannot self-register through public forms
