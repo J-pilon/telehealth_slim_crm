@@ -35,7 +35,7 @@ class TaskPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       elsif user.patient?
-        scope.where(patient: user.patient) # Patients can see tasks for their patient record
+        scope.where(patient: user.patient, user: user) # Patients can see tasks for their patient record
       else
         scope.none
       end

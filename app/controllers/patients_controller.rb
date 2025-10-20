@@ -16,9 +16,11 @@ class PatientsController < ApplicationController
 
   def show
     authorize @patient
+
+    scoped_tasks = policy_scope(Task)
     @recent_messages = @patient.messages.recent.limit(10)
-    @pending_tasks = @patient.tasks.pending.limit(10)
-    @completed_tasks = @patient.tasks.completed.limit(5)
+    @pending_tasks = scoped_tasks.pending.limit(10)
+    @completed_tasks = scoped_tasks.completed.limit(5)
   end
 
   def new
