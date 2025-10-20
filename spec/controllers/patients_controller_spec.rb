@@ -148,15 +148,7 @@ RSpec.describe PatientsController, type: :controller do
 
   describe 'POST #create' do
     let(:valid_attributes) do
-      {
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        date_of_birth: 30.years.ago,
-        medical_record_number: 'MR123456',
-        status: 'active'
-      }
+      FactoryBot.attributes_for(:patient)
     end
 
     context 'when user is not authenticated' do

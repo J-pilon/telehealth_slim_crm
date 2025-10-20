@@ -71,6 +71,9 @@ RSpec.describe 'Patients Management', type: :system do
       page.execute_script("document.querySelector('input[name=\"patient[date_of_birth]\"]').value = '1990-01-01'")
       fill_in 'Medical record number', with: 'MR123456'
       select 'Active', from: 'Status'
+      fill_in 'Health Question 1', with: 'Sample health answer 1'
+      fill_in 'Health Question 2', with: 'Sample health answer 2'
+      fill_in 'Health Question 3', with: 'Sample health answer 3'
 
       click_button 'Create Patient'
 

@@ -9,9 +9,9 @@ FactoryBot.define do
     date_of_birth { Faker::Date.birthday(min_age: 18, max_age: 80) }
     medical_record_number { "MR#{Faker::Number.number(digits: 8)}" }
     status { 'active' }
-    health_question_1 { 'Sample answer 1' }
-    health_question_2 { 'Sample answer 2' }
-    health_question_3 { 'Sample answer 3' }
+    health_question_one { 'Sample answer 1' }
+    health_question_two { 'Sample answer 2' }
+    health_question_three { 'Sample answer 3' }
 
     trait :inactive do
       status { 'inactive' }

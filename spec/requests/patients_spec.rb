@@ -72,17 +72,7 @@ RSpec.describe 'Patients', type: :request do
   end
 
   describe 'POST /patients' do
-    let(:valid_attributes) do
-      {
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john@example.com',
-        phone: '1234567890',
-        date_of_birth: '1990-01-01',
-        medical_record_number: 'MR123456',
-        status: 'active'
-      }
-    end
+    let(:valid_attributes) { attributes_for(:patient) }
 
     context 'when user is not authenticated' do
       it 'redirects to sign in' do
