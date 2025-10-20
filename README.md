@@ -2,6 +2,10 @@
 
 A minimal CRM skeleton built with Rails 7, designed for healthcare providers to manage patients, messages, and tasks with real-time updates using Hotwire.
 
+## Walkthrough
+
+[brief walkthrough of CRM flow](https://www.loom.com/share/b31b25262e284ed3b28580c1227b4994?sid=67a3ca34-06c8-4a6b-a620-733bd9b538f0)
+
 ## Features
 
 - **User Authentication** - Devise-based login with admin/patient roles
