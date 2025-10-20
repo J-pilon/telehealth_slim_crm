@@ -24,6 +24,14 @@ RSpec.describe Patient, type: :model do
     it { is_expected.to allow_value('1234567890').for(:phone) }
     it { is_expected.not_to allow_value('123').for(:phone) }
     it { is_expected.not_to allow_value('abc1234567').for(:phone) }
+
+    it { is_expected.to validate_presence_of(:health_question_one) }
+    it { is_expected.to validate_presence_of(:health_question_two) }
+    it { is_expected.to validate_presence_of(:health_question_three) }
+
+    it { is_expected.to validate_length_of(:health_question_one).is_at_most(100) }
+    it { is_expected.to validate_length_of(:health_question_two).is_at_most(100) }
+    it { is_expected.to validate_length_of(:health_question_three).is_at_most(100) }
   end
 
   describe 'enums' do

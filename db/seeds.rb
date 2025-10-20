@@ -63,7 +63,10 @@ patients = []
     phone: Faker::PhoneNumber.subscriber_number(length: 10),
     date_of_birth: Faker::Date.birthday(min_age: 18, max_age: 90),
     medical_record_number: "MR#{Faker::Number.unique.between(from: 10_000_000, to: 99_999_999)}",
-    status: %w[active inactive].sample
+    status: %w[active inactive].sample,
+    health_question_one: 'answer one',
+    health_question_two: 'answer two',
+    health_question_three: 'answer three'
   )
 
   patient_users << patient_user
@@ -82,7 +85,10 @@ puts '🏥 Creating additional patients for admin management...'
     phone: Faker::PhoneNumber.subscriber_number(length: 10),
     date_of_birth: Faker::Date.birthday(min_age: 18, max_age: 90),
     medical_record_number: "MR#{Faker::Number.unique.between(from: 10_000_000, to: 99_999_999)}",
-    status: %w[active inactive].sample
+    status: %w[active inactive].sample,
+    health_question_one: 'answer one',
+    health_question_two: 'answer two',
+    health_question_three: 'answer three'
   )
 end
 

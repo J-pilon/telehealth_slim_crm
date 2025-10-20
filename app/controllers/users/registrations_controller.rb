@@ -14,7 +14,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
         phone: '0000000000',
         date_of_birth: 18.years.ago,
         medical_record_number: "MR#{SecureRandom.hex(4).upcase}",
-        status: 'active'
+        status: 'active',
+        health_question_one: 'answer one',
+        health_question_two: 'answer two',
+        health_question_three: 'answer three'
       )
     end
     root_path
