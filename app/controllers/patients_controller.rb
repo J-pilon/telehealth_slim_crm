@@ -107,6 +107,7 @@ class PatientsController < ApplicationController
 
   def patient_params
     params.require(:patient).permit(:first_name, :last_name, :email, :phone,
-                                    :date_of_birth, :medical_record_number, :status)
+                                    :date_of_birth, :medical_record_number, :status,
+                                    :health_question_one, :health_question_two, :health_question_three)
   end
 end

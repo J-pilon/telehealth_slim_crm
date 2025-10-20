@@ -1,10 +1,10 @@
 <%= form_with(model: patient, local: true, class: "space-y-6") do |form| %>
   <% if patient.errors.any? %>
-    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-      <h3 class="text-sm font-medium text-red-800 mb-2">
+    <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+      <h3 class="mb-2 text-sm font-medium text-red-800">
         <%= pluralize(patient.errors.count, "error") %> prohibited this patient from being saved:
       </h3>
-      <ul class="text-sm text-red-700 list-disc list-inside">
+      <ul class="text-sm list-disc list-inside text-red-700">
         <% patient.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -12,7 +12,7 @@
     </div>
   <% end %>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
     <div>
       <%= form.label :first_name, class: "form-label" %>
       <%= form.text_field :first_name, class: "form-input" %>
@@ -49,6 +49,27 @@
           options_for_select([['Active', 'active'], ['Inactive', 'inactive']], patient.status),
           { prompt: 'Select status' },
           { class: "form-input" } %>
+    </div>
+  </div>
+
+  <div class="pt-6 mt-6 border-t border-gray-200">
+    <h3 class="mb-4 text-lg font-medium text-gray-900">Health Information</h3>
+
+    <div class="space-y-4">
+      <div>
+        <%= form.label :health_question_one, "Health Question 1", class: "form-label" %>
+        <%= form.text_area :health_question_one, rows: 3, class: "form-input" %>
+      </div>
+
+      <div>
+        <%= form.label :health_question_two, "Health Question 2", class: "form-label" %>
+        <%= form.text_area :health_question_two, rows: 3, class: "form-input" %>
+      </div>
+
+      <div>
+        <%= form.label :health_question_three, "Health Question 3", class: "form-label" %>
+        <%= form.text_area :health_question_three, rows: 3, class: "form-input" %>
+      </div>
     </div>
   </div>
 

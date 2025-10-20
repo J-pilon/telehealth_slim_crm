@@ -43,7 +43,10 @@ class User < ApplicationRecord
       phone: '0000000000',
       date_of_birth: 18.years.ago,
       medical_record_number: "MR#{SecureRandom.hex(4).upcase}",
-      status: 'active'
+      status: 'active',
+      health_question_one: 'health answer 1',
+      health_question_two: 'health answer 2',
+      health_question_three: 'health answer 3'
     )
   end
 end
