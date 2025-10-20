@@ -18,6 +18,7 @@ class Patient < ApplicationRecord
   validates :date_of_birth, presence: true
   validates :medical_record_number, presence: true, uniqueness: true, length: { minimum: 5, maximum: 20 }
   validates :status, presence: true
+  validates :health_question_one, :health_question_two, :health_question_three, presence: true, length: { maximum: 100 }
 
   # Scopes
   scope :active, -> { where(status: 'active') }
